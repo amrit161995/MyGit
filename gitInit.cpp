@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <fstream>    
-
+#include<string.h>
 #include<errno.h>
 
 using namespace std;
@@ -29,7 +29,7 @@ void gitinit(){
     	chdir(".");
         int check=mkdir(".mygit",0755);
         if(check==-1){
-            cout<<"Error initialising the repository"<<endl;
+            cout<<"Error initialising the Repository"<<endl;
         }
         else{
         	mkdir(".mygit/branches",0755);
@@ -66,13 +66,15 @@ void gitinit(){
   			fs << "# git ls-files --others --exclude-from=.git/info/exclude\n# Lines that start with '#' are comments.\n# For a project mostly in C, the following would be a good set of\n# exclude patterns (uncomment them if you want to use them):\n# *.[oa]\n# *~";
   			fs.close();
 
-            cout<<"Initialised new repository"<<endl;
+            cout<<"Initialised New Repository"<<endl;
         }
     }
     
 }
 
-int main(){
-    gitinit();
+int main(int args,char *argv[]){
+	// cout<<argv[1];
+	if (strcmp("init",argv[1])==0)
+    	gitinit();
     return 0;
 }
