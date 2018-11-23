@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<string>
 #include <openssl/sha.h>
-#include "generateSHA.h"
+#include "generateSHA.cpp"
 // #include<boost.h>
 
 // void gitAdd(string fileName){
@@ -33,7 +33,33 @@
 
 using namespace std;
 
-void gitAdd()
+
+class TestA
+{
+    private:
+        string type;
+        string header;
+        string content;
+        int length;
+        
+
+    public:
+        // TestA(){type = "";header="";content=""; length=0; }
+        string gitAdd();
+
+        void Print_Type()
+        {
+            printf("Type : %s",type);
+        }
+
+        void Print_Content()
+        {
+            printf("%s",content);
+        }
+};
+
+
+string TestA::gitAdd()
 {
     FILE *fptr;
   
@@ -46,25 +72,46 @@ void gitAdd()
     vector<char> bytes(fileSize);
     ifs.read(bytes.data(), fileSize);
 
-    string s= string(bytes.data(), fileSize);
+    content= string(bytes.data(), fileSize);
 
-    cout<<s<<endl;
-    int n=s.length();
+    // cout<<content<<endl;
+    int length=content.length();
+    type="blob";
+    header=type+" "+to_string(content.length())+'\0';
+    // cout<<header;
 
-    string header="blob "+to_string(s.length())+'\0';
-    cout<<header;
-
-    string store=header+s;
-    cout<<store;
+    string store=header+content;
+    // cout<<store;
 
     string sha1String=generateSHAstring(store);
-    cout<<sha1String;
+    // cout<<sha1String;
 
+return sha1String;
 }
 
+void serialize(){
+    TestA Test;
+    string hash_filename=Test.gitAdd();
+    FILE *File = fopen("File.txt","wb");
+    // Test.Print();
+    fwrite((char *)&Test,sizeof(Test),1,File); //Treats the object as if it is a char array
+    fclose(File);
 
+     TestA Test2;
+    // FILE *File;
+    File = fopen("File.txt","rb");
+    fread((char *)&Test2,sizeof(Test2),1,File); //Treats the object as if it is a char array
+    Test2.Print_Content();
+    fclose(File);
+}
+
+// void deserialize(){
+
+
+// }
 int main(){
-    string fileName="abc.txt";
-    gitAdd();
+    // string fileName="abc.txt";
+    serialize();
+    // deserialize();
     return 0;
 }
