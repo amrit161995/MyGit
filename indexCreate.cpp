@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<string>
+#include<cstring>
 
 #include <unistd.h>
 #include <sys/stat.h>
@@ -11,83 +12,59 @@
 
 using namespace std;
 
+#define debug(x) cout<<"Checkpoint "<<x<<endl
 
 class Index
 {
-   public:
-        string mode="";
-        string hash="";
-        int stage=0;
-        string path="";
-        
+    char mode[10];
+    char hash[40];
+    int stage;
+    char path[100];   
 
-    // public:
-    //     // TestA(){type = "";header="";content=""; length=0; }
-    //     // string gitAdd();
+public:
+    Index(char* mode,char* hash,int stage,char* path) {
+        strcpy(this->mode,mode);
+        strcpy(this->hash,hash);
+        strcpy(this->path,path);
+        this->stage = stage;
+    }       
 
-       
-
-
-       
+    void display() {
+        cout<<mode<<endl;
+        cout<<hash<<endl;
+        cout<<stage<<endl;
+        cout<<path<<endl;
+    }
 };
 
+void indexFill(char* mode,char* hash,int stage,char* path){
+    Index test(mode,hash,stage,path);
+    ofstream ofs(".mygit/index",ios::app|ios::binary);
+    ofs.write((char*)&test,sizeof(test)); 
+    ofs.close();
+}
 
+void indexRead(){
+    //Reading
+    ifstream ifs(".mygit/index", ios::binary);
+    ifs.seekg(0, std::ios::end);
+    int fileSize = ifs.tellg();
+    ifs.seekg(0, std::ios::beg);
+    vector<Index> list(fileSize/sizeof(Index));
+    ifs.read((char*)list.data(), fileSize);
+    ifs.close();
 
-        void indexFill(string mode,string hash,int stage,string path,int count){
-            //cout<<"hello";
-            vector <Index> list; 
-            // Index test;
-            // test.mode="test";
-            // test.hash="test";
-            // test.stage=0;
-            // test.path="/";
-            // list.push_back(test);
-               FILE *File;
-            //  File=fopen(".mygit/index","wb");
-            // // Test.Print_Content();
-            // // cout<<Test.getContent();
-            // fwrite((char *)&list[0],list.size()*sizeof(Index),1,File); 
-
-            
-            File = fopen(".mygit/index","rb");
-
-             fseek (File , 0 , SEEK_END);
-                size_t lSize = ftell (File);
-                rewind (File);
-            fread((char *)&list[0],sizeof(Index)*count,1,File);
-
-            // Index Test;
-            
-            // Test.mode=mode;
-            // Test.hash=hash;
-            // Test.stage=stage;
-            // Test.path=path;
-
-            // list.push_back(Test);
-            // File=fopen(".mygit/index","wb");
-            // // Test.Print_Content();
-            // // cout<<Test.getContent();
-            // fwrite((char *)&list,sizeof(list),1,File); //Treats the object as if it is a char array
-            // fclose(File);
-
-            
-        }
-
-         void indexRead(string file){
-             // Index Test2;
-             FILE *File;
-              vector <Index> list; 
-             
-            File = fopen(".mygit/index","rb");
-            fread((char *)&list,sizeof(list),1,File); //Treats the object as if it is a char array
-            // Test2.Print_Content();
-            fclose(File);
-
-         }
-
+    //Displaying
+    debug(list.size());
+    for(int i=0;i<list.size();i++) {
+        debug(i);
+        list[i].display();
+        cout<<endl;
+    }
+}
 
 int main(){
-    // string fileName="abc.txt";
-    indexFill("1","asd",0,"asd",1);
+    indexFill("1","asd",0,"asd");
+    indexRead();
     return 0;
 }
