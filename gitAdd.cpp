@@ -76,8 +76,6 @@ string TestA::gitAdd(string fileName)
     return sha1;
 }
 
-
-
 void serialize(string fileName){
     //cout<<"hello";
     TestA Test;
@@ -141,7 +139,7 @@ void serialize(string fileName){
  }
 int main(){
     // string fileName="abc.txt";
-    serialize("abc.txt");
+    serialize("sample.txt");
 
     string hash;
     cout<<"enter hash: ";
