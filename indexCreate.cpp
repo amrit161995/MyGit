@@ -64,8 +64,8 @@ void indexRead(){
     }
 }
 
-// int main(){
-//     indexFill("1","asd",0,"asd");
-//     indexRead();
-//     return 0;
-// }
+int main(){
+    // indexFill("1","asd",0,"asd");
+    indexRead();
+    return 0;
+}
