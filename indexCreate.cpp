@@ -16,18 +16,21 @@ using namespace std;
 
 class Index
 {
-    char mode[10];
-    char hash[40];
-    int stage;
-    char path[100];   
+    char mode[10],path[100],hash[40];    
+    int stage,commit;
 
 public:
-    void init(char* mode,char* hash,int stage,char* path) {
+    void init(char* mode,char* hash,int stage,char* path,int commit) {
         strcpy(this->mode,mode);
         strcpy(this->hash,hash);
         strcpy(this->path,path);
         this->stage = stage;
+        this->commit = commit;
     }       
+
+    char* getPath() {
+        return path;
+    }
 
     void display() {
         cout<<mode<<endl;
@@ -37,15 +40,7 @@ public:
     }
 };
 
-void indexFill(char* mode,char* hash,int stage,char* path){
-    Index test;
-    test.init(mode,hash,stage,path);
-    ofstream ofs(".mygit/index",ios::app|ios::binary);
-    ofs.write((char*)&test,sizeof(test)); 
-    ofs.close();
-}
-
-void indexRead(){
+vector<Index> indexRead(){
     //Reading
     ifstream ifs(".mygit/index", ios::binary);
     ifs.seekg(0, std::ios::end);
@@ -54,18 +49,25 @@ void indexRead(){
     vector<Index> list(fileSize/sizeof(Index));
     ifs.read((char*)list.data(), fileSize);
     ifs.close();
+    return list;
+}
 
-    //Displaying
-    debug(list.size());
-    for(int i=0;i<list.size();i++) {
-        debug(i);
-        list[i].display();
-        cout<<endl;
-    }
+void indexFill(char* mode,char* hash,int stage,char* path,int commit){
+    bool flag=0;
+    vector<Index> list = indexRead();
+    for(int i=0;i<list.size();i++) if(strcmp(path,list[i].getPath())==0) flag=1;
+    if(flag==0) {
+        cout<<"Added to index file"<<endl;
+        Index test;
+        test.init(mode,hash,stage,path,commit);
+        ofstream ofs(".mygit/index",ios::app|ios::binary);
+        ofs.write((char*)&test,sizeof(test)); 
+        ofs.close();
+    }    
 }
 
 // int main(){
 //     // indexFill("1","asd",0,"asd");
-//     indexRead();
+//     // indexRead();
 //     return 0;
 // }
