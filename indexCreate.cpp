@@ -17,10 +17,12 @@ using namespace std;
 
 class Index
 {
-    char mode[10],path[100],hash[40];    
-    int stage,commit;
+    
 
 public:
+    char mode[10],path[100],hash[40];    
+    int stage,commit;
+    
     void init(char* mode,char* hash,int stage,char* path,int commit) {
         strcpy(this->mode,mode);
         strcpy(this->hash,hash);
