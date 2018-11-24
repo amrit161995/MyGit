@@ -2,6 +2,7 @@
 #include<string>
 #include <openssl/sha.h>
 #include "generateSHA.cpp"
+#include "indexCreate.cpp"
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -94,6 +95,17 @@ void serialize(){
 
      cout<<blobname<<endl;
     // cout<<hash_filename;
+
+
+    //adding entry into index
+    string path = ".mygit/objects/"+directory+"/"+blobname;
+    char *cstr = new char[path.length() + 1];
+    strcpy(cstr, path.c_str());
+    char *cstr1 = new char[hash_filename.length() + 1];
+    strcpy(cstr1, hash_filename.c_str());
+    indexFill("100",cstr1,0,cstr);
+    
+
     FILE *File = fopen((".mygit/objects/"+directory+"/"+blobname).c_str(),"wb");
     // Test.Print_Content();
     // cout<<Test.getContent();

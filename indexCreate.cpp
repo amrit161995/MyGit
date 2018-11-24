@@ -22,7 +22,7 @@ class Index
     char path[100];   
 
 public:
-    Index(char* mode,char* hash,int stage,char* path) {
+    void init(char* mode,char* hash,int stage,char* path) {
         strcpy(this->mode,mode);
         strcpy(this->hash,hash);
         strcpy(this->path,path);
@@ -38,7 +38,8 @@ public:
 };
 
 void indexFill(char* mode,char* hash,int stage,char* path){
-    Index test(mode,hash,stage,path);
+    Index test;
+    test.init(mode,hash,stage,path);
     ofstream ofs(".mygit/index",ios::app|ios::binary);
     ofs.write((char*)&test,sizeof(test)); 
     ofs.close();
@@ -63,8 +64,8 @@ void indexRead(){
     }
 }
 
-int main(){
-    indexFill("1","asd",0,"asd");
-    indexRead();
-    return 0;
-}
+// int main(){
+//     indexFill("1","asd",0,"asd");
+//     indexRead();
+//     return 0;
+// }
