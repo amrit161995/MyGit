@@ -25,7 +25,7 @@ class TestA
 
     public:
         // TestA(){type = "";header="";content=""; length=0; }
-        string gitAdd();
+        string gitAdd(string fileName);
 
         void Print_Type()
         {
@@ -49,12 +49,12 @@ class TestA
 };
 
 
-string TestA::gitAdd()
+string TestA::gitAdd(string fileName)
 {
     FILE *fptr;
   
     // char buffer[512];
-    ifstream ifs("abc.txt", ios::in | ios::binary | ios::ate);
+    ifstream ifs(fileName.c_str(), ios::in | ios::binary | ios::ate);
 
     ifstream::pos_type fileSize = ifs.tellg();
     ifs.seekg(0, ios::beg);
@@ -78,10 +78,10 @@ string TestA::gitAdd()
 
 
 
-void serialize(){
+void serialize(string fileName){
     //cout<<"hello";
     TestA Test;
-    string hash_filename=Test.gitAdd();
+    string hash_filename=Test.gitAdd(fileName);
 
     string directory="";
     string blobname="";
@@ -96,14 +96,18 @@ void serialize(){
      cout<<blobname<<endl;
     // cout<<hash_filename;
 
-
     //adding entry into index
-    string path = ".mygit/objects/"+directory+"/"+blobname;
+    char cwd[1024];
+    getcwd(cwd,sizeof(cwd));
+    string pa(cwd);
+    string path = pa + "/" + fileName;
+    cout<<path<<endl;
     char *cstr = new char[path.length() + 1];
     strcpy(cstr, path.c_str());
     char *cstr1 = new char[hash_filename.length() + 1];
     strcpy(cstr1, hash_filename.c_str());
     indexFill("100",cstr1,0,cstr);
+    cout<<"Added to index file"<<endl;
     
 
     FILE *File = fopen((".mygit/objects/"+directory+"/"+blobname).c_str(),"wb");
@@ -138,7 +142,7 @@ void serialize(){
  }
 int main(){
     // string fileName="abc.txt";
-    serialize();
+    serialize("abc.txt");
 
     string hash;
     cout<<"enter hash: ";
