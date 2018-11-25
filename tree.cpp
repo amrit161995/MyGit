@@ -33,6 +33,12 @@ class Tree
         
 };
 
+typedef struct treeObj{
+    // char type[10];
+    // char hash[40];
+    string type;
+    string hash;
+}treeObj;
 
 string createTreeObject(char *path1,vector<Index> list){
     string content ="";
@@ -89,8 +95,20 @@ string createTreeObject(char *path1,vector<Index> list){
     string sha= generateSHAstring(store);
     // cout<<path1<<endl;
     // cout<<content<<endl;
-
+    
     string hash_filename = sha;
+    treeObj tr;
+
+    tr.hash=sha;
+    tr.type="tree";
+    
+    string writeStr=tr.hash+" "+tr.type;
+    cout<<"object "<<writeStr<<endl;
+
+    std::ofstream ofs;
+    ofs.open (".mygit/info/objectsFile.txt", std::ofstream::out | std::ofstream::app);
+    ofs << writeStr;
+    ofs.close();
 
     string directory="";
     string treename="";
