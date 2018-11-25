@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<string>
 #include <openssl/sha.h>
-#include "generateSHA.cpp"
+// #include "generateSHA.cpp"
 #include "indexCreate.cpp"
 #include <unistd.h>
 #include <sys/stat.h>
@@ -139,7 +139,7 @@ void serialize(string fileName){
  }
 int main(){
     // string fileName="abc.txt";
-    serialize("abc.txt");
+    serialize("sample.txt");
 
     string hash;
     cout<<"enter hash: ";

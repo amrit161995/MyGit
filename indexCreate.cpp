@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<string>
 #include<cstring>
-
+#include "generateSHA.cpp"
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -35,6 +35,10 @@ public:
         return path;
     }
 
+    char* getHash() {
+        return hash;
+    }
+
     int getCommit() {
         return commit;
     }
@@ -66,8 +70,9 @@ vector<Index> indexRead(){
 
 void indexFill(char* mode,char* hash,int stage,char* path,int commit){
     bool flag=0;
+    int i;
     vector<Index> lis = indexRead();
-    for(int i=0;i<lis.size();i++) if(strcmp(path,lis[i].getPath())==0) flag=1;
+    for(i=0;i<lis.size();i++) if(strcmp(path,lis[i].getPath())==0) {flag=1;break;}
     if(flag==0) {
         cout<<"Added to index file"<<endl;
         Index test;
@@ -75,15 +80,54 @@ void indexFill(char* mode,char* hash,int stage,char* path,int commit){
         ofstream ofs(".mygit/index",ios::app|ios::binary);
         ofs.write((char*)&test,sizeof(test)); 
         ofs.close();
-    }    
+    }
+    else {
+        lis[i].init(mode,hash,stage,path,commit);
+        remove(".mygit/index");
+        ofstream ofs(".mygit/index",ios::app|ios::binary);
+        for(int i=0;i<lis.size();i++) {
+            ofs.write((char*)&lis[i],sizeof(lis[i])); 
+        }
+        ofs.close();
+    }
+}
+
+string newHash(string fileName) {
+    FILE *fptr;
+    ifstream ifs(fileName.c_str(), ios::in | ios::binary | ios::ate);
+
+    ifstream::pos_type fileSize = ifs.tellg();
+    ifs.seekg(0, ios::beg);
+
+    vector<char> bytes(fileSize);
+    ifs.read(bytes.data(), fileSize);
+
+    char* content = new char[(long long)(fileSize)+1];
+    // char* content = t;
+    string temp=string(bytes.data(), fileSize);
+    strcpy(content, temp.c_str());
+    // setContent(content);
+    // string type="blob";
+    string header="blob "+to_string(fileSize);
+
+    string store = header+ " " + content;
+    string sha1=generateSHAstring(store);
+
+    return sha1;
 }
 
 int check(string name, vector<Index> lis) {
     int msg=0;
     for(int i=0;i<lis.size();i++) {
         if(strcmp(lis[i].getPath(),name.c_str())==0) {
-            if(lis[i].getCommit()==0) msg=1;
-            else msg=2;
+            if(lis[i].getCommit()==0) {
+                // string newHash = generateSHA(name);
+                // cout<<name<<endl;
+                // cout<<newHash<<endl<<lis[i].getHash()<<endl;
+                if(strcmp(newHash(name).c_str(),lis[i].getHash())==0) msg=1;
+                else msg=2;
+            }
+            else msg=3;
             return msg;
         }
     }
@@ -100,6 +144,7 @@ map< string,vector<string> > getFiles(vector<string> fileList) {
             // cout<<msg<<endl;
             if(msg==0) m["untracked"].push_back(fileList[i]);
             else if(msg==1) m["tracked"].push_back(fileList[i]);
+            else if(msg==2) m["not staged"].push_back(fileList[i]);
             else m["committed"].push_back(fileList[i]);
         }
     }

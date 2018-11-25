@@ -35,20 +35,43 @@ void listdir(const char *name, int indent, vector<string> &lis)
     closedir(dir);
 }
 
-int main() {
+void display(map < string,vector<string> > m) {
+    cout<<"On branch master"<<endl;
+    if(m["committed"].size()==0) cout<<endl<<"Initial commit"<<endl<<endl;
+    if(m["tracked"].size()!=0) {
+        cout<<"Changes to be committed:"<<endl;
+        cout<<"  (use \"git rm --cached <file>...\" to unstage)"<<endl<<endl;
+        for(int j=0;j<m["tracked"].size();j++) cout<<"\tnew file:   "<<m["tracked"][j]<<endl;
+        cout<<endl;
+    }
+    if(m["not staged"].size()!=0) {
+        cout<<"Changes not staged for commit:"<<endl;
+        cout<<"  (use \"mygit add <file>...\" to update what will be committed)"<<endl;
+        cout<<"  (use \"mygit checkout -- <file>...\" to discard changes in working directory)"<<endl<<endl;
+        for(int j=0;j<m["not staged"].size();j++) cout<<"\tmodified:   "<<m["not staged"][j]<<endl;
+        cout<<endl;
+    }
+    if(m["untracked"].size()!=0) {
+        cout<<"Untracked files:"<<endl;
+        cout<<"  (use \"mygit add <file>...\" to include in what will be committed)"<<endl<<endl;
+        for(int j=0;j<m["untracked"].size();j++) cout<<"\t"<<m["untracked"][j]<<endl;
+        cout<<endl;
+    }
+    if(m["tracked"].size()==0)
+        if(m["untracked"].size()!=0)
+            cout<<"nothing added to commit but untracked files present (use \"mygit add\" to track)"<<endl;
+        else
+            cout<<"nothing to commit, working directory clean"<<endl;
+}
+
+void status() {
     vector<string> lis;
     listdir(".", 0,lis);
-    cout<<lis.size()<<endl;
     map< string,vector<string> > m = getFiles(lis);
-    cout<<"Untracked"<<endl;
-    for(int j=0;j<m["untracked"].size();j++) cout<<m["untracked"][j]<<endl;
-    cout<<endl;
-    cout<<"Tracked (Added but not committed)"<<endl;
-    for(int j=0;j<m["tracked"].size();j++) cout<<m["tracked"][j]<<endl;
-    cout<<endl;
-    cout<<"Committed"<<endl;
-    for(int j=0;j<m["committed"].size();j++) cout<<m["committed"][j]<<endl;
-    cout<<endl;
-    // }
-    return 0;
+
+    display(m);
+}
+
+int main() {
+    status();
 }
