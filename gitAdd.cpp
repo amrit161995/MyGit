@@ -48,6 +48,10 @@ class TestA
         }
 };
 
+struct blobObj{
+    string type;
+    string hash;
+};
 
 string TestA::gitAdd(string fileName)
 {
@@ -81,6 +85,16 @@ void serialize(string fileName){
     //cout<<"hello";
     TestA Test;
     string hash_filename=Test.gitAdd(fileName);
+
+    struct blobObj b;
+    b.hash=hash_filename;
+    b.type="blob";
+    string writeStr=b.hash+" "+b.type;
+
+    std::ofstream ofs;
+    ofs.open (".mygit/info/objectsFile.txt", std::ofstream::out | std::ofstream::app);
+    ofs << writeStr;
+    ofs.close();
 
     string directory="";
     string blobname="";
