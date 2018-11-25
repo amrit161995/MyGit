@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <array>
 #include <vector>
-
+#include<fstream>
 using namespace std;
 
 void diff(string f1, string f2){
@@ -34,17 +34,23 @@ void diff(string f1, string f2){
 
     //cout << s[2];
 
+     std::ofstream ofs;
+         ofs.open ("temp_diff", std::ofstream::out );
+         
+
     for(int i = 3; i < s.size(); i++){
-        if(s[i][0]=='+')
-            in++;
-        else if(s[i][0]=='-'){
-            del++;
-        }
+        // if(s[i][0]=='+')
+        //     in++;
+        // else if(s[i][0]=='-'){
+        //     del++;
+        // }
+
+        ofs << s[i];
 
         //cout << s[i][0]<< endl;
     }
 
-    cout << "1 file changed, " << in << " insertions(+), "<< del << " deletions(-)" << endl;
+    // cout << "1 file changed, " << in << " insertions(+), "<< del << " deletions(-)" << endl;
 
 
 }
@@ -52,7 +58,7 @@ void diff(string f1, string f2){
 int main(){
 
 
-    diff("abc.txt" , "def.txt");
+    diff("abc" , "def");
 
     return 0;
 }
