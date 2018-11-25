@@ -105,7 +105,7 @@ void serialize(string fileName){
     strcpy(cstr, path.c_str());
     char *cstr1 = new char[hash_filename.length() + 1];
     strcpy(cstr1, hash_filename.c_str());
-    indexFill("100",cstr1,0,cstr,0);
+    indexFill("100644",cstr1,0,cstr,0);
     
 
     FILE *File = fopen((".mygit/objects/"+directory+"/"+blobname).c_str(),"wb");

@@ -43,6 +43,10 @@ public:
         return commit;
     }
 
+    void setCommit(int c) {
+        this->commit = c;
+    }
+
     void display() {
         cout<<mode<<endl;
         cout<<hash<<endl;
@@ -90,6 +94,17 @@ void indexFill(char* mode,char* hash,int stage,char* path,int commit){
         }
         ofs.close();
     }
+}
+
+void commitAll() {
+    vector<Index> lis = indexRead();
+    for(int i=0;i<lis.size();i++) lis[i].setCommit(1);
+    remove(".mygit/index");
+    ofstream ofs(".mygit/index",ios::app|ios::binary);
+    for(int i=0;i<lis.size();i++) {
+        ofs.write((char*)&lis[i],sizeof(lis[i])); 
+    }
+    ofs.close();
 }
 
 string newHash(string fileName) {

@@ -185,6 +185,7 @@ void deserializeCommit(string file){
      v=indexRead();
      string treehash=createTreeObject(".",v);
     serializeCommit(treehash,"asddasa","amrit kataria","amrit kataria","second commit");
+    commitAll();
 
     string hash;
     cout<<"enter hash: ";
