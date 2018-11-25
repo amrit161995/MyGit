@@ -11,7 +11,7 @@
 #include<fstream>
 #include<iostream>
 #include<stdlib.h>
-#include "generateSHA.cpp"
+// #include "generateSHA.cpp"
 using namespace std;
 
 #include "indexCreate.cpp"

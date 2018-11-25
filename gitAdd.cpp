@@ -17,8 +17,8 @@ using namespace std;
 class TestA
 {
     private:
-        string type="";
-        string header="";
+        char type[10];
+        char header[50];
         char *content;
         int length;
         
@@ -67,10 +67,11 @@ string TestA::gitAdd(string fileName)
     string temp=string(bytes.data(), fileSize);
     strcpy(content, temp.c_str());
     setContent(content);
-    type="blob";
-    header=type+" "+to_string(fileSize);
-
-    string store = header+ " " + content;
+    strcpy(type,"blob");
+    string temptype=type;
+    strcpy(header,(temptype+" "+to_string(fileSize)).c_str());
+    string tempheader=header;
+    string store = tempheader+ " " + content;
     string sha1=generateSHAstring(store);
 
     return sha1;
@@ -131,10 +132,10 @@ void serialize(string fileName){
     for(int i=2;i<40;i++)
         blobname+=file[i];
      string path=".mygit/objects/"+directory+"/"+blobname;
-    File = fopen(path.c_str(),"rb");
-    fread((char *)&Test2,sizeof(Test2),1,File); //Treats the object as if it is a char array
-    Test2.Print_Content();
-    fclose(File);
+     File = fopen(path.c_str(),"rb");
+     fread((char *)&Test2,sizeof(Test2),1,File); //Treats the object as if it is a char array
+     Test2.Print_Content();
+     fclose(File);
 
  }
 int main(){

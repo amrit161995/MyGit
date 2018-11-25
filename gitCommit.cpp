@@ -9,7 +9,8 @@
 #include<fstream>
 #include<iostream>
 #include<stdlib.h>
-
+#include <ctime>
+#include <bits/stdc++.h>
 using namespace std;
 
 class Commit
@@ -52,11 +53,55 @@ class Commit
 
 string createCommit(string tree,string parent,string author,string committer,string message)
 {   
+
+	struct stat buf;
+    if (stat("log", &buf) != -1)
+    {
+    	vector <string> vecOfStrs;
+        // cout<<"hello";
+        std::ifstream in("log");
+        string str;
+		while (std::getline(in, str))
+			{
+				// Line contains string of length > 0 then save it in vector
+				if(str.size() > 0)
+					vecOfStrs.push_back(str);
+			}
+
+			string line = vecOfStrs[vecOfStrs.size()-1]; 
+		    
+		    vector <string> tokens; 
+		    stringstream check1(line); 
+		    string intermediate; 
+		     
+		    while(getline(check1, intermediate, ' ')) 
+		    { 
+		        tokens.push_back(intermediate); 
+		    } 
+		      
+		    // cout<<tokens[1]<<endl;
+		    parent = tokens[1];
+		    
+			in.close();
+    }
+    else{
+    	parent="0000000000000000000000000000000000000000";
+    	
+
+    	 
+
+    }
+
     strcpy(this->tree,tree.c_str());
     strcpy(this->parent,parent.c_str());
     strcpy(this->author,author.c_str());
     strcpy(this->committer,committer.c_str());
     strcpy(this->message,message.c_str());
+
+    
+   
+
+
     string temp="tree : "+tree+";"+"parent : "+parent+";"+"author : "+author+";"+"committer : "+committer+";"+"message : "+message+";";
     char* t = new char[temp.length()];
     content = t;
@@ -71,6 +116,13 @@ string createCommit(string tree,string parent,string author,string committer,str
     string store = header+ " " + temp;
     string sha1=generateSHAstring(store);
 
+     std::time_t result = std::time(nullptr);
+    	// string timetemp=(string)result;
+    	string log=parent+" " + sha1 + " " + author + " " + committer + " "+to_string(result) +" +530"+ " commit : "+message+"\n";
+    	 std::ofstream ofs;
+    	 ofs.open ("log", std::ofstream::out | std::ofstream::app);
+    	 ofs << log;
+    	 ofs.close();
     return sha1;
 }
 
@@ -132,7 +184,7 @@ void deserializeCommit(string file){
     vector<Index> v;
      v=indexRead();
      string treehash=createTreeObject(".",v);
-    serializeCommit(treehash,"asddas","amrit","amrit","initial commit");
+    serializeCommit(treehash,"asddasa","amrit kataria","amrit kataria","second commit");
 
     string hash;
     cout<<"enter hash: ";
