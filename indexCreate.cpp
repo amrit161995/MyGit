@@ -85,7 +85,7 @@ void indexFill(char* mode,char* hash,int stage,char* path,int commit){
         ofs.write((char*)&test,sizeof(test)); 
         ofs.close();
     }
-    else {
+    else if(strcmp(lis[i].getHash(),hash)!=0) {
         lis[i].init(mode,hash,stage,path,commit);
         remove(".mygit/index");
         ofstream ofs(".mygit/index",ios::app|ios::binary);

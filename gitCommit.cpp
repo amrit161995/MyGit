@@ -123,11 +123,22 @@ string createCommit(string tree,string parent,string author,string committer,str
     	 ofs.open ("log", std::ofstream::out | std::ofstream::app);
     	 ofs << log;
     	 ofs.close();
+
+
+    //write master
+    	 // std::ofstream ofs;
+    	 ofs.open (".mygit/refs/heads/master", std::ofstream::out);
+    	 ofs << sha1;
+    	 ofs.close();
+
     return sha1;
 }
 
 
 };
+
+
+
 
 void serializeCommit(string tree,string parent,string author,string committer,string message){
     //cout<<"hello";
@@ -179,14 +190,102 @@ void deserializeCommit(string file){
  }
 
 
+void listdir(const char *name, int indent, vector<string> &lis)
+{
+    DIR *dir;
+    struct dirent *entry;
+
+    if (!(dir = opendir(name)))        
+        return;
+
+    while ((entry = readdir(dir)) != NULL) {
+        if (entry->d_type == DT_DIR and entry->d_name[0]!='.') {
+            char path[1024];
+            if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+                continue;
+            snprintf(path, sizeof(path), "%s/%s", name, entry->d_name);
+            // printf("%*s[%s]\n", indent, "", entry->d_name);
+            listdir(path, indent + 2,lis);
+        } 
+        else if(entry->d_name[0]!='.'){
+            char cwd[1024];
+            getcwd(cwd,sizeof(cwd));
+            string pa(cwd);
+            string path = pa + "/" + entry->d_name;
+            lis.push_back(path);
+            // printf("%*s- %s\n", indent, "", entry->d_name);
+        }
+    }
+    closedir(dir);
+}
+
+void commitMain(){
+	vector<Index> v;
+    v=indexRead();
+
+    int flag=0;
+    for(int i=0;i<v.size();i++){
+    	// cout<<v[i].commit<<endl;
+    	if(v[i].commit == 0){
+
+    		flag++;
+    	}
+    }
+
+    // cout<<flag<<endl;
+    vector<string> lis;
+    listdir(".", 0,lis);
+    map< string,vector<string> > m = getFiles(lis);
+
+   if(flag>0){
+   if(m["tracked"].size()!=0) {
+        string treehash=createTreeObject(".",v);
+	    serializeCommit(treehash,"asddasa","amrit kataria","amrit kataria","second commit");
+	    commitAll();
+    }
+    else{
+
+
+    	if(m["untracked"].size()!=0){
+    		cout<<"Untracked files:"<<endl;
+	        cout<<"  (use \"mygit add <file>...\" to include in what will be committed)"<<endl<<endl;
+	        for(int j=0;j<m["untracked"].size();j++) cout<<"\t"<<m["untracked"][j]<<endl;
+	        cout<<endl;
+    	}
+
+    	if(m["modified"].size()!=0 or m["deleted"].size()!=0){
+    		cout<<"Changes not staged for commit:"<<endl;
+	        cout<<"  (use \"mygit add <file>...\" to update what will be committed)"<<endl;
+	        cout<<"  (use \"mygit checkout -- <file>...\" to discard changes in working directory)"<<endl<<endl;
+	        for(int j=0;j<m["modified"].size();j++) cout<<"\tmodified:   "<<m["modified"][j]<<endl;
+	        for(int j=0;j<m["deleted"].size();j++) cout<<"\tdeleted:   "<<m["deleted"][j]<<endl;
+	        cout<<endl;
+
+
+    	}
+
+    	
+    		if(m["tracked"].size()==0){
+		        if(m["untracked"].size()!=0)
+		            cout<<"nothing added to commit but untracked files present (use \"mygit add\" to track)"<<endl;
+		        else
+		            cout<<"nothing to commit, working directory clean"<<endl;
+		    
+
+    	}
+	}
+}
+
+else{
+	cout<<"nothing to commit, working directory clean"<<endl;
+}
+}
+
+
  int main(){
     // string fileName="abc.txt";
-    vector<Index> v;
-     v=indexRead();
-     string treehash=createTreeObject(".",v);
-    serializeCommit(treehash,"asddasa","amrit kataria","amrit kataria","second commit");
-    commitAll();
-
+    
+ 	commitMain();
     string hash;
     cout<<"enter hash: ";
     cin>>hash;
