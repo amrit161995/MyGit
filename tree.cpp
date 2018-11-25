@@ -151,18 +151,18 @@ void deserializeTree(string file){
 
 
 
-int main(){
-    string hash;
-    Index i;
+// int main(){
+//     string hash;
+//     Index i;
     
-    vector<Index> v;
-    v=indexRead();
+//     vector<Index> v;
+//     v=indexRead();
 
     
-    cout<<createTreeObject(".",v)<<endl;
-    cout<<"enter hash :"<<endl;
-    cin>>hash;
+//     cout<<createTreeObject(".",v)<<endl;
+//     cout<<"enter hash :"<<endl;
+//     cin>>hash;
 
-    deserializeTree(hash);
-    return 0;
-}
+//     deserializeTree(hash);
+//     return 0;
+// }

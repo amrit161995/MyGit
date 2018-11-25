@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<string>
 #include <openssl/sha.h>
-#include "generateSHA.cpp"
+#include "tree.cpp"
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -31,7 +31,7 @@ class Commit
         void Print_Content()
         {
             cout<<"tree : "<<tree<<endl;
-            // cout<<"parent : "<<parent<<endl;
+             cout<<"parent : "<<parent<<endl;
             cout<<"author : "<<author<<endl;
             cout<<"committer : "<<committer<<endl;
             cout<<endl;
@@ -87,7 +87,7 @@ void serializeCommit(string tree,string parent,string author,string committer,st
     for(int i=0;i<2;i++)
         directory+=hash_filename[i];
     mkdir((".mygit/objects/"+directory).c_str(),0777);
-     cout<<directory<<endl;
+     cout<<directory;
 
     for(int i=2;i<40;i++)
         commitname+=hash_filename[i];
@@ -129,11 +129,17 @@ void deserializeCommit(string file){
 
  int main(){
     // string fileName="abc.txt";
-    serializeCommit("asd132qdads","asddas","amrit","amrit","initial commit");
+    vector<Index> v;
+     v=indexRead();
+     string treehash=createTreeObject(".",v);
+    serializeCommit(treehash,"asddas","amrit","amrit","initial commit");
 
     string hash;
     cout<<"enter hash: ";
     cin>>hash;
     deserializeCommit(hash);
+    cout<<"enter tree hash: ";
+    cin>>hash;
+    deserializeTree(hash);
     return 0;
 }

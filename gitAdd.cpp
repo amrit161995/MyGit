@@ -139,7 +139,7 @@ void serialize(string fileName){
  }
 int main(){
     // string fileName="abc.txt";
-    serialize("sample.txt");
+    serialize("abc.txt");
 
     string hash;
     cout<<"enter hash: ";
