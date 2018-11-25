@@ -116,14 +116,12 @@ string newHash(string fileName) {
     return sha1;
 }
 
-int check(string name, vector<Index> lis) {
+int check(string name, vector<Index> lis,vector<bool> &v) {
     int msg=0;
     for(int i=0;i<lis.size();i++) {
         if(strcmp(lis[i].getPath(),name.c_str())==0) {
+            v[i] = true;
             if(lis[i].getCommit()==0) {
-                // string newHash = generateSHA(name);
-                // cout<<name<<endl;
-                // cout<<newHash<<endl<<lis[i].getHash()<<endl;
                 if(strcmp(newHash(name).c_str(),lis[i].getHash())==0) msg=1;
                 else msg=2;
             }
@@ -137,17 +135,18 @@ int check(string name, vector<Index> lis) {
 map< string,vector<string> > getFiles(vector<string> fileList) {
     vector<Index> lis = indexRead();
     map< string,vector<string> > m;
-    if(lis.size()!=0) {
+    vector<bool> v(lis.size(),false);
+    // if(lis.size()!=0) {
         int msg;
         for(int i=0;i<fileList.size();i++) {
-            msg = check(fileList[i],lis);
-            // cout<<msg<<endl;
+            msg = check(fileList[i],lis,v);
             if(msg==0) m["untracked"].push_back(fileList[i]);
             else if(msg==1) m["tracked"].push_back(fileList[i]);
-            else if(msg==2) m["not staged"].push_back(fileList[i]);
+            else if(msg==2) m["modified"].push_back(fileList[i]);
             else m["committed"].push_back(fileList[i]);
-        }
+        // }
     }
+    for(int i=0;i<v.size();i++) if(v[i]==false) m["deleted"].push_back(lis[i].getPath());
     return m;
 }
 

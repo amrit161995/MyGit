@@ -44,11 +44,12 @@ void display(map < string,vector<string> > m) {
         for(int j=0;j<m["tracked"].size();j++) cout<<"\tnew file:   "<<m["tracked"][j]<<endl;
         cout<<endl;
     }
-    if(m["not staged"].size()!=0) {
+    if(m["modified"].size()!=0 or m["deleted"].size()!=0) {
         cout<<"Changes not staged for commit:"<<endl;
         cout<<"  (use \"mygit add <file>...\" to update what will be committed)"<<endl;
         cout<<"  (use \"mygit checkout -- <file>...\" to discard changes in working directory)"<<endl<<endl;
-        for(int j=0;j<m["not staged"].size();j++) cout<<"\tmodified:   "<<m["not staged"][j]<<endl;
+        for(int j=0;j<m["modified"].size();j++) cout<<"\tmodified:   "<<m["modified"][j]<<endl;
+        for(int j=0;j<m["deleted"].size();j++) cout<<"\tdeleted:   "<<m["deleted"][j]<<endl;
         cout<<endl;
     }
     if(m["untracked"].size()!=0) {
@@ -68,7 +69,6 @@ void status() {
     vector<string> lis;
     listdir(".", 0,lis);
     map< string,vector<string> > m = getFiles(lis);
-
     display(m);
 }
 
