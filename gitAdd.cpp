@@ -92,7 +92,7 @@ void serialize(string fileName){
     string writeStr=b.hash+" "+b.type;
 
     std::ofstream ofs;
-    ofs.open (".mygit/info/objectsFile.txt", std::ofstream::out | std::ofstream::app);
+    ofs.open(".mygit/info/objectsFile.txt", std::ofstream::out | std::ofstream::app);
     ofs << writeStr;
     ofs.close();
 
