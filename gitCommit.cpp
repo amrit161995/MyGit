@@ -282,16 +282,16 @@ else{
 }
 
 
- int main(){
-    // string fileName="abc.txt";
+//  int main(){
+//     // string fileName="abc.txt";
     
- 	commitMain();
-    string hash;
-    cout<<"enter hash: ";
-    cin>>hash;
-    deserializeCommit(hash);
-    cout<<"enter tree hash: ";
-    cin>>hash;
-    deserializeTree(hash);
-    return 0;
-}
+//  	commitMain();
+//     string hash;
+//     cout<<"enter hash: ";
+//     cin>>hash;
+//     deserializeCommit(hash);
+//     cout<<"enter tree hash: ";
+//     cin>>hash;
+//     deserializeTree(hash);
+//     return 0;
+// }
