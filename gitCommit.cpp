@@ -74,7 +74,7 @@ string createCommit(string tree,string parent,string author,string committer,str
 		    stringstream check1(line); 
 		    string intermediate; 
 		     
-		    while(getline(check1, intermediate, ' ')) 
+		    while(getline(check1, intermediate, '|')) 
 		    { 
 		        tokens.push_back(intermediate); 
 		    } 
@@ -118,7 +118,7 @@ string createCommit(string tree,string parent,string author,string committer,str
 
      std::time_t result = std::time(nullptr);
     	// string timetemp=(string)result;
-    	string log=parent+" " + sha1 + " " + author + " " + committer + " "+to_string(result) +" +530"+ " commit : "+message+"\n";
+    	string log=parent+"|" + sha1 + "|" + author + "|" + committer + "|"+to_string(result) +"|+530"+ "|commit|"+message+"\n";
     	 std::ofstream ofs;
     	 ofs.open ("log", std::ofstream::out | std::ofstream::app);
     	 ofs << log;
@@ -282,16 +282,16 @@ else{
 }
 
 
-//  int main(){
-//     // string fileName="abc.txt";
+ int main(){
+    // string fileName="abc.txt";
     
-//  	commitMain();
-//     string hash;
-//     cout<<"enter hash: ";
-//     cin>>hash;
-//     deserializeCommit(hash);
-//     cout<<"enter tree hash: ";
-//     cin>>hash;
-//     deserializeTree(hash);
-//     return 0;
-// }
+ 	commitMain();
+    string hash;
+    cout<<"enter hash: ";
+    cin>>hash;
+    deserializeCommit(hash);
+    cout<<"enter tree hash: ";
+    cin>>hash;
+    deserializeTree(hash);
+    return 0;
+}
