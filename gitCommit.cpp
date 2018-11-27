@@ -161,6 +161,51 @@ void serializeCommit(string tree,string parent,string author,string committer,st
     // Test.Print_Content();
     // cout<<Test.getContent();
     fwrite((char *)&com,sizeof(com),1,File); //Treats the object as if it is a char array
+
+    struct stat buf;
+    int flag=0;
+    if (stat(".mygit/info/objectsFile.txt", &buf) != -1)
+    {
+        vector <string> objectsvec;
+        // cout<<"hello";
+        std::ifstream in(".mygit/info/objectsFile.txt");
+
+        string str;
+        
+        while (std::getline(in, str))
+            {
+                // Line contains string of length > 0 then save it in vector
+                if(str.size() > 0)
+                    objectsvec.push_back(str);
+            }
+
+            for(int i=0;i<objectsvec.size();i++){
+                string line = objectsvec[i]; 
+                
+                vector <string> tokens; 
+                stringstream check1(line); 
+                string intermediate; 
+                 
+                while(getline(check1, intermediate, ' ')) 
+                { 
+                    tokens.push_back(intermediate); 
+                } 
+                  
+                if(hash_filename == tokens[0])
+                    flag++;
+                // parent = tokens[1];
+            }
+            in.close();
+    }
+
+    if(flag==0){
+        string writeStr=hash_filename+" commit";
+        std::ofstream ofs;
+        ofs.open (".mygit/info/objectsFile.txt", std::ofstream::out | std::ofstream::app);
+        ofs << writeStr <<endl;
+        ofs.close();
+    }
+
     fclose(File);
 
     
@@ -282,16 +327,16 @@ else{
 }
 
 
- int main(){
-    // string fileName="abc.txt";
+//  int main(){
+//     // string fileName="abc.txt";
     
- 	commitMain();
-    string hash;
-    cout<<"enter hash: ";
-    cin>>hash;
-    deserializeCommit(hash);
-    cout<<"enter tree hash: ";
-    cin>>hash;
-    deserializeTree(hash);
-    return 0;
-}
+//  	commitMain();
+//     string hash;
+//     cout<<"enter hash: ";
+//     cin>>hash;
+//     deserializeCommit(hash);
+//     cout<<"enter tree hash: ";
+//     cin>>hash;
+//     deserializeTree(hash);
+//     return 0;
+// }

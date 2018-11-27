@@ -10,20 +10,21 @@
 #include<fstream>
 #include<iostream>
 #include<stdlib.h>
-
+#include<bits/stdc++.h>
 using namespace std;
 
 
 class TestA
 {
     private:
-        char type[10];
-        char header[50];
-        char *content;
-        int length;
         
 
     public:
+    	char type[10];
+        char header[50];
+        char *content;
+        // int length;
+        
         // TestA(){type = "";header="";content=""; length=0; }
         string gitAdd(string fileName);
 
@@ -34,18 +35,18 @@ class TestA
 
         void Print_Content()
         {
-            int len = sizeof(content)/sizeof(char);
+            // int len = sizeof(content)/sizeof(char);
             // cout<<"len: "<<len<<endl;
             cout<<content;
         }
 
         void setContent(char *con){
-            content=con;
+            strcpy(content,con);
         }
 
-        char * getContent(){
-            return content;
-        }
+        // char * getContent(){
+        //     return content;
+        // }
 };
 
 struct blobObj{
@@ -91,11 +92,49 @@ void serialize(string fileName){
     b.type="blob";
     string writeStr=b.hash+" "+b.type;
 
-    std::ofstream ofs;
-    ofs.open(".mygit/info/objectsFile.txt", std::ofstream::out | std::ofstream::app);
-    ofs << writeStr;
-    ofs.close();
+    struct stat buf;
+    int flag=0;
+    if (stat(".mygit/info/objectsFile.txt", &buf) != -1)
+    {
+        vector <string> objectsvec;
+        // cout<<"hello";
+        std::ifstream in(".mygit/info/objectsFile.txt");
 
+        string str;
+        
+        while (std::getline(in, str))
+            {
+                // Line contains string of length > 0 then save it in vector
+                if(str.size() > 0)
+                    objectsvec.push_back(str);
+            }
+
+            for(int i=0;i<objectsvec.size();i++){
+                string line = objectsvec[i]; 
+                
+                vector <string> tokens; 
+                stringstream check1(line); 
+                string intermediate; 
+                 
+                while(getline(check1, intermediate, ' ')) 
+                { 
+                    tokens.push_back(intermediate); 
+                } 
+                  
+                if(hash_filename == tokens[0])
+                    flag++;
+                // parent = tokens[1];
+            }
+            in.close();
+    }
+
+    if(flag==0){
+
+	    std::ofstream ofs;
+	    ofs.open(".mygit/info/objectsFile.txt", std::ofstream::out | std::ofstream::app);
+	    ofs << writeStr<<endl;
+	    ofs.close();
+	}
     string directory="";
     string blobname="";
     for(int i=0;i<2;i++)
@@ -134,20 +173,34 @@ void serialize(string fileName){
  void deserialize(string file){
      TestA Test2;
      FILE *File;
-
+ //     Test2=
+ //     Test2=(TestA*)malloc(st.st_size);
+	// new(Test2) TestA;
      string directory="";
      string blobname="";
 
+     // cout<<sizeof(Test2);
      for(int i=0;i<2;i++)
         directory+=file[i];
     // mkdir(".git/objects/"+directory);
-    // cout<<directory<<endl;
+     // cout<<directory<<endl;
 
     for(int i=2;i<40;i++)
         blobname+=file[i];
+
+    	// cout<<blobname;
+    
+      
      string path=".mygit/objects/"+directory+"/"+blobname;
+    struct stat st;
+    stat(path.c_str(), &st);
+      // cout<<sizeof(Test2.header);
+    // cout<<st.st_size;   
      File = fopen(path.c_str(),"rb");
-     fread((char *)&Test2,sizeof(Test2),1,File); //Treats the object as if it is a char array
+      // Test2.content = "hello";
+     fread((char *)&Test2,st.st_size,1,File); 
+     // cout<<sizeof(Test2);
+    //Treats the object as if it is a char array
      Test2.Print_Content();
      fclose(File);
 
