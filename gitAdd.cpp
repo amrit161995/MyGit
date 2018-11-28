@@ -10,33 +10,25 @@
 #include<fstream>
 #include<iostream>
 #include<stdlib.h>
-<<<<<<< HEAD
 #include <sstream>
 
-=======
 #include<bits/stdc++.h>
->>>>>>> f9146f07a9fd4e914c4a19028e255ad34faba938
+
 using namespace std;
 
 #define deb(x) cout<<"Checkpoint "<<x<<endl
 
 class TestA
 {
-    private:
-<<<<<<< HEAD
+    public:
         char type[10];
         char header[50];
-        char content[1000000];
+        char content[100000];
         int length;
-=======
->>>>>>> f9146f07a9fd4e914c4a19028e255ad34faba938
         
 
-    public:
-    	char type[10];
-        char header[50];
-        char *content;
-        // int length;
+    // public:
+    	// int length;
         
         // TestA(){type = "";header="";content=""; length=0; }
         string gitAdd(string fileName);
@@ -53,19 +45,16 @@ class TestA
             cout<<content;
         }
 
-<<<<<<< HEAD
         // void setContent(char *con){
         //     content=con;
         // }
-=======
         void setContent(char *con){
             strcpy(content,con);
         }
->>>>>>> f9146f07a9fd4e914c4a19028e255ad34faba938
 
-        // char * getContent(){
-        //     return content;
-        // }
+        char * getContent(){
+            return content;
+        }
 };
 
 struct blobObj{
@@ -147,9 +136,10 @@ void serialize(string fileName){
             in.close();
     }
 
-    if(flag==0){
+    std::ofstream ofs;
 
-	    std::ofstream ofs;
+    if(flag==0){
+	    
 	    ofs.open(".mygit/info/objectsFile.txt", std::ofstream::out | std::ofstream::app);
 	    ofs << writeStr<<endl;
 	    ofs.close();
@@ -172,7 +162,7 @@ void serialize(string fileName){
     getcwd(cwd,sizeof(cwd));
     string pa(cwd);
     string path = pa + "/" + fileName;
-    // cout<<path<<endl;
+    cout<<path<<endl;
     char *cstr = new char[path.length() + 1];
     strcpy(cstr, path.c_str());
     char *cstr1 = new char[hash_filename.length() + 1];
@@ -195,19 +185,11 @@ void serialize(string fileName){
 
  TestA deserialize(string file){
      TestA Test2;
-<<<<<<< HEAD
      // FILE *File;
-
-     string directory="";
-     string blobname="";
 
      deb(sizeof(Test2.getContent()));
 
-     for(int i=0;i<2;i++)
-        directory+=file[i];
-=======
-     FILE *File;
- //     Test2=
+     //     Test2=
  //     Test2=(TestA*)malloc(st.st_size);
 	// new(Test2) TestA;
      string directory="";
@@ -218,7 +200,6 @@ void serialize(string fileName){
         directory+=file[i];
     // mkdir(".git/objects/"+directory);
      // cout<<directory<<endl;
->>>>>>> f9146f07a9fd4e914c4a19028e255ad34faba938
 
     for(int i=2;i<40;i++)
         blobname+=file[i];
@@ -227,36 +208,34 @@ void serialize(string fileName){
     
       
      string path=".mygit/objects/"+directory+"/"+blobname;
-<<<<<<< HEAD
      // File = fopen(path.c_str(),"rb");
      // fread((char *)&Test2,sizeof(Test2),1,File); //Treats the object as if it is a char array
      ifstream ifs (path.c_str(),ios::in|ios::binary);
      ifs.read((char *)&Test2,sizeof(Test2));
+     ifs.close();
      deb(23);
      Test2.Print_Type();
-=======
-    struct stat st;
-    stat(path.c_str(), &st);
+    // struct stat st;
+    // stat(path.c_str(), &st);
       // cout<<sizeof(Test2.header);
     // cout<<st.st_size;   
-     File = fopen(path.c_str(),"rb");
+     // File = fopen(path.c_str(),"rb");
       // Test2.content = "hello";
-     fread((char *)&Test2,st.st_size,1,File); 
+     // fread((char *)&Test2,st.st_size,1,File); 
      // cout<<sizeof(Test2);
     //Treats the object as if it is a char array
->>>>>>> f9146f07a9fd4e914c4a19028e255ad34faba938
      Test2.Print_Content();
      deb(34);
      // fclose(File);
      return Test2;
  }
-int main(){
-    // string fileName="abc.txt";
-    serialize("7");
+// int main(){
+//     // string fileName="abc.txt";
+//     serialize("test/t.txt");
 
-    string hash;
-    cout<<"enter hash: ";
-    cin>>hash;
-    deserialize(hash);
-    return 0;
-}
+//     string hash;
+//     cout<<"enter hash: ";
+//     cin>>hash;
+//     deserialize(hash);
+//     return 0;
+// }

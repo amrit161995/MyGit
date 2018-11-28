@@ -151,11 +151,15 @@ int check(string name, vector<Index> lis,vector<bool> &v) {
 
 map< string,vector<string> > getFiles(vector<string> fileList) {
     vector<Index> lis = indexRead();
+    // for(int i=0;i<lis.size();i++) {
+    //     cout<<lis[i].getPath()<<endl;
+    // }
     map< string,vector<string> > m;
     vector<bool> v(lis.size(),false);
     // if(lis.size()!=0) {
         int msg;
         for(int i=0;i<fileList.size();i++) {
+            // cout<<fileList[i]<<endl;
             msg = check(fileList[i],lis,v);
             if(msg==0) m["untracked"].push_back(fileList[i]);
             else if(msg==1) m["tracked"].push_back(fileList[i]);

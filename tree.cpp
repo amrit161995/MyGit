@@ -79,7 +79,7 @@ string createTreeObject(char *path1,vector<Index> list){
                 if(list[i].path==tempath1){
 
                     hash_temp=list[i].hash;
-                    string temp="100644 blob "+ hash_temp +" "+ temp1 +";\n" ;
+                    string temp="100644 blob "+ hash_temp +" "+ tempath1 +";\n" ;
                     content=content+temp;
                 }
 

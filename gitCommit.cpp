@@ -234,6 +234,29 @@ void deserializeCommit(string file){
 
  }
 
+ vector<string> splitStrings(string str, char dl)
+{
+    string word = "";
+    str = str + dl;
+    int l = str.size();
+    vector<string> substr_list;
+    for (int i = 0; i < l; i++) {
+        if (str[i] != dl) {
+            if(str[i]=='\\') {
+                i++;
+            }
+            word = word + str[i];
+        }
+        else {
+            if ((int)word.size() != 0)
+                substr_list.push_back(word);
+            word = "";
+        }
+    }
+    return substr_list;
+}
+
+
 
 void listdir(const char *name, int indent, vector<string> &lis)
 {
@@ -256,7 +279,10 @@ void listdir(const char *name, int indent, vector<string> &lis)
             char cwd[1024];
             getcwd(cwd,sizeof(cwd));
             string pa(cwd);
-            string path = pa + "/" + entry->d_name;
+            vector<string> na = splitStrings(name,'/');
+            string path;
+            if(na.size()>1) path = pa + "/" + na[na.size()-1] + "/" + entry->d_name;
+            else path = pa + "/" + entry->d_name;
             lis.push_back(path);
             // printf("%*s- %s\n", indent, "", entry->d_name);
         }

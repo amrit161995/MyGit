@@ -10,14 +10,14 @@ using namespace std;
 
 #define debug(x) cout<<"Checkpoint "<<x<<endl
 
-class TestA
-{
-    public:
-        char type[10];
-        char header[50];
-        char content[100000];
-        int length;
-};
+// class TestA
+// {
+//     public:
+//         char type[10];
+//         char header[50];
+//         char content[100000];
+//         int length;
+// };
 
 
 void retCommitObjectTree(string hash,string &treeObj,string &parent){
@@ -44,27 +44,27 @@ void retCommitObjectTree(string hash,string &treeObj,string &parent){
     }
 }
 
-vector<string> splitStrings(string str, char dl)
-{
-    string word = "";
-    str = str + dl;
-    int l = str.size();
-    vector<string> substr_list;
-    for (int i = 0; i < l; i++) {
-        if (str[i] != dl) {
-            if(str[i]=='\\') {
-                i++;
-            }
-            word = word + str[i];
-        }
-        else {
-            if ((int)word.size() != 0)
-                substr_list.push_back(word);
-            word = "";
-        }
-    }
-    return substr_list;
-}
+// vector<string> splitStrings(string str, char dl)
+// {
+//     string word = "";
+//     str = str + dl;
+//     int l = str.size();
+//     vector<string> substr_list;
+//     for (int i = 0; i < l; i++) {
+//         if (str[i] != dl) {
+//             if(str[i]=='\\') {
+//                 i++;
+//             }
+//             word = word + str[i];
+//         }
+//         else {
+//             if ((int)word.size() != 0)
+//                 substr_list.push_back(word);
+//             word = "";
+//         }
+//     }
+//     return substr_list;
+// }
 
 void deserialize(string file,string name){
     TestA Test2;
@@ -173,7 +173,7 @@ void calculateDiff(map<string,int> &newFiles,map<string,int> &oldFiles) {
 
 int main(){
     string oldTreeObj,newTreeObj,parent;
-    retCommitObjectTree("13eaa52cd010401de5c3b7b393dce26f3557dc9e",newTreeObj,parent);
+    retCommitObjectTree("f11c8e3ddd9a7862f75865509a4fb4064f818101",newTreeObj,parent);
     cout<<newTreeObj<<endl;
     retCommitObjectTree(parent,oldTreeObj,parent);
     cout<<oldTreeObj<<endl;
