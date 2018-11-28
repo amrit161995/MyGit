@@ -10,16 +10,18 @@
 #include<fstream>
 #include<iostream>
 #include<stdlib.h>
+#include <sstream>
 
 using namespace std;
 
+#define deb(x) cout<<"Checkpoint "<<x<<endl
 
 class TestA
 {
     private:
         char type[10];
         char header[50];
-        char *content;
+        char content[1000000];
         int length;
         
 
@@ -39,9 +41,9 @@ class TestA
             cout<<content;
         }
 
-        void setContent(char *con){
-            content=con;
-        }
+        // void setContent(char *con){
+        //     content=con;
+        // }
 
         char * getContent(){
             return content;
@@ -66,11 +68,11 @@ string TestA::gitAdd(string fileName)
     vector<char> bytes(fileSize);
     ifs.read(bytes.data(), fileSize);
     // cout<<"filesize: "<<fileSize<<endl; 
-    char* t = new char[(long long)(fileSize)+1];
-    content = t;
+    // char* t = new char[(long long)(fileSize)+1];
+    // content = t;
     string temp=string(bytes.data(), fileSize);
     strcpy(content, temp.c_str());
-    setContent(content);
+    // setContent(content);
     strcpy(type,"blob");
     string temptype=type;
     strcpy(header,(temptype+" "+to_string(fileSize)).c_str());
@@ -114,7 +116,7 @@ void serialize(string fileName){
     getcwd(cwd,sizeof(cwd));
     string pa(cwd);
     string path = pa + "/" + fileName;
-    cout<<path<<endl;
+    // cout<<path<<endl;
     char *cstr = new char[path.length() + 1];
     strcpy(cstr, path.c_str());
     char *cstr1 = new char[hash_filename.length() + 1];
@@ -122,35 +124,44 @@ void serialize(string fileName){
     indexFill("100644",cstr1,0,cstr,0);
     
 
-    FILE *File = fopen((".mygit/objects/"+directory+"/"+blobname).c_str(),"wb");
-    // Test.Print_Content();
-    // cout<<Test.getContent();
-    fwrite((char *)&Test,sizeof(Test),1,File); //Treats the object as if it is a char array
-    fclose(File);
+    // FILE *File = fopen((".mygit/objects/"+directory+"/"+blobname).c_str(),"wb");
+    // // Test.Print_Content();
+    // // cout<<Test.getContent();
+    // fwrite((char *)&Test,sizeof(Test),1,File); //Treats the object as if it is a char array
+    // fclose(File);
+
+    ofs.open((".mygit/objects/"+directory+"/"+blobname).c_str(),ios::out|ios::binary);
+    ofs.write((char *)&Test,sizeof(Test));
+    ofs.close();
 
     
 }
 
- void deserialize(string file){
+ TestA deserialize(string file){
      TestA Test2;
-     FILE *File;
+     // FILE *File;
 
      string directory="";
      string blobname="";
 
+     deb(sizeof(Test2.getContent()));
+
      for(int i=0;i<2;i++)
         directory+=file[i];
-    // mkdir(".git/objects/"+directory);
-    // cout<<directory<<endl;
 
     for(int i=2;i<40;i++)
         blobname+=file[i];
      string path=".mygit/objects/"+directory+"/"+blobname;
-     File = fopen(path.c_str(),"rb");
-     fread((char *)&Test2,sizeof(Test2),1,File); //Treats the object as if it is a char array
+     // File = fopen(path.c_str(),"rb");
+     // fread((char *)&Test2,sizeof(Test2),1,File); //Treats the object as if it is a char array
+     ifstream ifs (path.c_str(),ios::in|ios::binary);
+     ifs.read((char *)&Test2,sizeof(Test2));
+     deb(23);
+     Test2.Print_Type();
      Test2.Print_Content();
-     fclose(File);
-
+     deb(34);
+     // fclose(File);
+     return Test2;
  }
 int main(){
     // string fileName="abc.txt";

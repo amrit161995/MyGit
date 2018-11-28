@@ -56,8 +56,9 @@ string createTreeObject(char *path1,vector<Index> list){
             snprintf(path, sizeof(path), "%s/%s", path1, entry->d_name);
             string hash_temp=createTreeObject(path,list);
             // cout<<endl;
-            // cout<<hash_temp<<endl;
+            // cout<<hash_temp<<endl;            
             string temp1=entry->d_name;
+            cout<<temp1<<endl;
             string temp="040000 tree " + hash_temp +" "+ temp1+";\n";
             content=content+temp;
 
@@ -65,7 +66,10 @@ string createTreeObject(char *path1,vector<Index> list){
 
         else {
             string hash_temp="";
-            string temp1=entry->d_name;
+            char cwd[1024];
+            getcwd(cwd,sizeof(cwd));
+            string pa(cwd);
+            string temp1=pa+"/"+entry->d_name;
             for(int i=0;i<list.size();i++){
                 
                 string tempath=realpath(path1,NULL);
@@ -103,7 +107,7 @@ string createTreeObject(char *path1,vector<Index> list){
     tr.type="tree";
     
     string writeStr=tr.hash+" "+tr.type;
-    cout<<"object "<<writeStr<<endl;
+    // cout<<"object "<<writeStr<<endl;
 
     std::ofstream ofs;
     ofs.open (".mygit/info/objectsFile.txt", std::ofstream::out | std::ofstream::app);

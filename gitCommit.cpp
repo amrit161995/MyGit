@@ -85,6 +85,7 @@ string createCommit(string tree,string parent,string author,string committer,str
 			in.close();
     }
     else{
+        cout<<"flag"<<endl;
     	parent="0000000000000000000000000000000000000000";
     	
 
@@ -144,6 +145,7 @@ void serializeCommit(string tree,string parent,string author,string committer,st
     //cout<<"hello";
     Commit com;
     string hash_filename=com.createCommit(tree,parent,author,committer,message);
+    cout<<"flag"<<endl;
 
     string directory="";
     string commitname="";
@@ -240,7 +242,9 @@ void commitMain(){
    if(flag>0){
    if(m["tracked"].size()!=0) {
         string treehash=createTreeObject(".",v);
+        cout<<"flag"<<endl;
 	    serializeCommit(treehash,"asddasa","amrit kataria","amrit kataria","second commit");
+        cout<<"flag"<<endl;
 	    commitAll();
     }
     else{
@@ -282,16 +286,16 @@ else{
 }
 
 
- int main(){
-    // string fileName="abc.txt";
+//  int main(){
+//     // string fileName="abc.txt";
     
- 	commitMain();
-    string hash;
-    cout<<"enter hash: ";
-    cin>>hash;
-    deserializeCommit(hash);
-    cout<<"enter tree hash: ";
-    cin>>hash;
-    deserializeTree(hash);
-    return 0;
-}
+//  	commitMain();
+//     string hash;
+//     cout<<"enter hash: ";
+//     cin>>hash;
+//     deserializeCommit(hash);
+//     cout<<"enter tree hash: ";
+//     cin>>hash;
+//     deserializeTree(hash);
+//     return 0;
+// }
