@@ -11,10 +11,11 @@
 #include<fstream>
 #include<iostream>
 #include<stdlib.h>
+#include<bits/stdc++.h>
 // #include "generateSHA.cpp"
 using namespace std;
 
-#include "indexCreate.cpp"
+#include "gitAdd.cpp"
 
 
 class Tree
@@ -109,11 +110,48 @@ string createTreeObject(char *path1,vector<Index> list){
     string writeStr=tr.hash+" "+tr.type;
     // cout<<"object "<<writeStr<<endl;
 
-    std::ofstream ofs;
-    ofs.open (".mygit/info/objectsFile.txt", std::ofstream::out | std::ofstream::app);
-    ofs << writeStr;
-    ofs.close();
+    struct stat buf;
+    int flag=0;
+    if (stat(".mygit/info/objectsFile.txt", &buf) != -1)
+    {
+        vector <string> objectsvec;
+        // cout<<"hello";
+        std::ifstream in(".mygit/info/objectsFile.txt");
 
+        string str;
+        
+        while (std::getline(in, str))
+            {
+                // Line contains string of length > 0 then save it in vector
+                if(str.size() > 0)
+                    objectsvec.push_back(str);
+            }
+
+            for(int i=0;i<objectsvec.size();i++){
+                string line = objectsvec[i]; 
+                
+                vector <string> tokens; 
+                stringstream check1(line); 
+                string intermediate; 
+                 
+                while(getline(check1, intermediate, ' ')) 
+                { 
+                    tokens.push_back(intermediate); 
+                } 
+                  
+                if(hash_filename == tokens[0])
+                    flag++;
+                // parent = tokens[1];
+            }
+            in.close();
+    }
+
+    if(flag==0){
+        std::ofstream ofs;
+        ofs.open (".mygit/info/objectsFile.txt", std::ofstream::out | std::ofstream::app);
+        ofs << writeStr <<endl;
+        ofs.close();
+       }
     string directory="";
     string treename="";
     for(int i=0;i<2;i++)
