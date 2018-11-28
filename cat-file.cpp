@@ -56,7 +56,7 @@ void catfile(string hash){
                 // cout<<type;
                 if(type == "blob"){   
                     // serialize("7");                 
-                    deserialize(hash);
+                    cout<<deserialize(hash);
                 }
                 if(type == "tree")
                     deserializeTree(hash);

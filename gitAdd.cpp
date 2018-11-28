@@ -176,14 +176,23 @@ void serialize(string fileName){
     // fwrite((char *)&Test,sizeof(Test),1,File); //Treats the object as if it is a char array
     // fclose(File);
 
-    ofs.open((".mygit/objects/"+directory+"/"+blobname).c_str(),ios::out|ios::binary);
-    ofs.write((char *)&Test,sizeof(Test));
-    ofs.close();
+    // ofs.open((".mygit/objects/"+directory+"/"+blobname).c_str(),ios::out|ios::binary);
+    // ofs.write((char *)&Test,sizeof(Test));
+    // ofs.close();
+std::ofstream binFile((".mygit/objects/"+directory+"/"+blobname).c_str(), std::ios::out | std::ios::binary);
+       if (binFile.is_open())
+       {
+          size_t len = strlen(Test.content);
+          binFile.write((char*)&len, sizeof(len));
+          binFile.write((char*)&Test.content[0], len);
 
+          // No need. The file will be closed when the function returns.
+          // binFile.close();
+       }
     
 }
 
- TestA deserialize(string file){
+ string deserialize(string file){
      TestA Test2;
      // FILE *File;
 
@@ -210,11 +219,23 @@ void serialize(string fileName){
      string path=".mygit/objects/"+directory+"/"+blobname;
      // File = fopen(path.c_str(),"rb");
      // fread((char *)&Test2,sizeof(Test2),1,File); //Treats the object as if it is a char array
-     ifstream ifs (path.c_str(),ios::in|ios::binary);
-     ifs.read((char *)&Test2,sizeof(Test2));
-     ifs.close();
-     deb(23);
-     Test2.Print_Type();
+     // ifstream ifs (path.c_str(),ios::in|ios::binary);
+     // ifs.read((char *)&Test2,sizeof(Test2));
+     // ifs.close();
+     // deb(23);
+     // Test2.Print_Type();
+     string te;
+     std::ifstream binFile(path.c_str(), std::ios::in | std::ios::binary);
+           if(binFile.is_open())
+           {
+              size_t len = 0;
+              binFile.read((char*)&len, sizeof(len));
+              te.resize(len);
+              binFile.read((char*)&te[0], len);
+           }
+       // cout<<te;
+      // te.erase (0,5);   
+      // return te;
     // struct stat st;
     // stat(path.c_str(), &st);
       // cout<<sizeof(Test2.header);
@@ -224,18 +245,19 @@ void serialize(string fileName){
      // fread((char *)&Test2,st.st_size,1,File); 
      // cout<<sizeof(Test2);
     //Treats the object as if it is a char array
-     Test2.Print_Content();
-     deb(34);
+     // Test2.Print_Content();
+     // deb(34);
      // fclose(File);
-     return Test2;
+     return te;
  }
+
 // int main(){
 //     // string fileName="abc.txt";
-//     serialize("test/t.txt");
+//     // serialize("test/t.txt");
 
 //     string hash;
 //     cout<<"enter hash: ";
 //     cin>>hash;
-//     deserialize(hash);
+//     cout<<deserialize(hash);
 //     return 0;
 // }
