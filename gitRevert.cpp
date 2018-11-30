@@ -122,6 +122,32 @@ void revert(string hash,string tre,map<string,int> &lis){
     }
 }
 
+vector<string> fileToVector(string name) {
+    vector<string> v;
+    string str;
+    ifstream ifs(name.c_str());  
+    while (getline(ifs, str)) v.push_back(str);
+    ifs.close();
+    return v;
+}
+
+// void addEnter(string name) {
+//     vector<string> v;
+//     string str;
+//     ifstream ifs(name.c_str());  
+//     while (getline(ifs, str)) v.push_back(str);
+//     ifs.close();
+//     for(int i=1;i<v.size();i++) {
+//         string st = v[i-1];
+//         if(v[i].length()==0 and st[st.lenght()-1]!="\n") st[st.length()-1]="\n";
+//     }    
+
+//     ofstream ofs(name.c_str());
+//     for(unsigned int i=0; i<v.size(); i++)
+//         ofs << v[i] << endl;
+//     ofs.close();
+// }
+
 void calculateDiff(map<string,int> &newFiles,map<string,int> &oldFiles,map<string,int> &diffFiles) {    
     map<string,int>::iterator it1;
     map<string,int>::iterator it2;
@@ -131,7 +157,9 @@ void calculateDiff(map<string,int> &newFiles,map<string,int> &oldFiles,map<strin
             string s = it2->first.substr(4,strlen(it2->first.c_str()));
             if(f==s) {
                 it1->second = 1;
-                it2->second = 1;                    
+                it2->second = 1;    
+                // addEnter(it1->first);
+                // addEnter(it2->first);                
                 diff(it1->first,it2->first,f);
                 diffFiles[f] = 1;
             }
@@ -157,22 +185,29 @@ void calculateDiff(map<string,int> &newFiles,map<string,int> &oldFiles,map<strin
     }
 }
 
-vector<string> fileToVector(string name) {
-    vector<string> v;
-    string str;
-    ifstream ifs(name.c_str());  
-    while (getline(ifs, str)) v.push_back(str);
-    ifs.close();
-    return v;
-}
-
 void applyDiff(map<string,int> diffFiles) {
     map<string,int>::iterator it;    
-    string p = "/home/arpit/Downloads/IIITH_Sem1/OS/OS_PROJECT";
     for(it=diffFiles.begin();it!=diffFiles.end();it++) {
         vector<string> na = splitStrings(it->first,':');
-        string name = "";
+        string name = "",temp = "",relPath = "";
         for(int i=0;i<na.size();i++) name = name + "/" + na[i];
+        char cwd[1024];
+        getcwd(cwd,sizeof(cwd));
+        string pa(cwd);
+        vector<string> nam = splitStrings(pa,'/');
+        for(int i=0;i<na.size();i++) {
+            if(na[i]!=nam[nam.size()-1]) relPath = relPath + "/" + na[i];
+            else {
+                relPath = relPath + "/" + na[i] + "/";
+                break;
+            }
+        }
+        // cout<<relPath<<endl;
+        temp = name;
+        temp.erase(0,relPath.length());
+        relPath = temp;
+        // cout<<"after"<<endl;
+        // cout<<relPath<<endl;
         if(it->second==1) {
             vector<string> curFile,diffFile,outFile;
             // na = splitStrings(it->first,':');
@@ -182,14 +217,21 @@ void applyDiff(map<string,int> diffFiles) {
 
             string pathDiff = ".mygit/diff_files/" + it->first;
             diffFile = fileToVector(pathDiff);
+            // for(int i=0;i<diffFile.size();i++) cout<<diffFile[i]<<endl;  
             diffFile.erase(diffFile.begin());
             diffFile.erase(diffFile.begin());
 
             // for(int i=0;i<curFile.size();i++) cout<<curFile[i]<<endl;
-            // for(int i=0;i<diffFile.size();i++) cout<<diffFile[i]<<endl;            
+            // for(int i=0;i<diffFile.size();i++) cout<<diffFile[i]<<endl;
+            // string st = diffFile[diffFile.size()-1];
+            // if(diffFile[diffFile.size()-1]=="")            
             int i=0,j=0;
             bool flag = false; 
             while(i<curFile.size() and j<diffFile.size()) {
+                // if(diffFile[j]=="\\ No newline at end of file") {
+                //     j++;
+                //     continue;
+                // }
                 string sign = diffFile[j].substr(0,1);
                 string line = diffFile[j].substr(1,strlen(diffFile[j].c_str()));
                 if(sign=="+") {
@@ -206,6 +248,10 @@ void applyDiff(map<string,int> diffFiles) {
                         i++;
                         j++;
                     }
+                }
+                else {
+                    flag = true;
+                    break;
                 }
             }
             while(i<curFile.size()) {
@@ -230,6 +276,10 @@ void applyDiff(map<string,int> diffFiles) {
                 for(unsigned int i=0; i<outFile.size(); i++)
                     ofs << outFile[i] << endl;
                 ofs.close();
+                serialize(relPath);
+            }
+            else {
+                cout<<"Merge Conflicts"<<endl;
             }
         }
         else if(it->second==2) {
@@ -242,8 +292,10 @@ void applyDiff(map<string,int> diffFiles) {
         else {
             string command = "cp .mygit/diffFiles/"+it->first+" "+name;
             system(command.c_str());
+            serialize(relPath);
         }
-    }    
+    }
+    commitMain("xyz","abc","Rvert commit");
 }
 
 void revertMain(string hash){
@@ -267,11 +319,11 @@ void revertMain(string hash){
     // }
     map<string,int> diffFiles;
     calculateDiff(newFiles,oldFiles,diffFiles);
-    string command = "rm -rf .mygit/diff";
-    system(command.c_str());
+    // string command = "rm -rf .mygit/diff";
+    // system(command.c_str());
     applyDiff(diffFiles);
-    command = "rm -rf .mygit/diff_files";
-    system(command.c_str());
+    // command = "rm -rf .mygit/diff_files";
+    // system(command.c_str());
 }
 
 // int main(){
