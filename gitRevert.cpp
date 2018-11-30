@@ -261,8 +261,10 @@ int main(){
     // }
     map<string,int> diffFiles;
     calculateDiff(newFiles,oldFiles,diffFiles);
-    // string command = "rm -rf .mygit/diff";
-    // system(command.c_str());
+    string command = "rm -rf .mygit/diff";
+    system(command.c_str());
     applyDiff(diffFiles);
+    command = "rm -rf .mygit/diffFiles";
+    system(command.c_str());
     return 0;
 }
