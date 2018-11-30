@@ -3,7 +3,6 @@
 #include<stdio.h>
 #include<string>
 #include <openssl/sha.h>
-#include "tree.cpp"
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -12,8 +11,8 @@
 #include<iostream>
 #include<stdlib.h>
 #include <ctime>
-#include<string>
 
+using namespace std;
 class Commit
 {
     public:
@@ -29,12 +28,12 @@ class Commit
         void Print_Content();
         void setContent(char *con);
         char * getContent();
-        string createCommit(string tree,string parent,string author,string committer,string message);
+        string createCommit(string tree,string author,string committer,string message);
 };
 
-void serializeCommit(string tree,string parent,string author,string committer,string message);
+void serializeCommit(string tree,string author,string committer,string message);
 void deserializeCommit(string file);
 void listdir(const char *name, int indent, vector<string> &lis);
-void commitMain(string str);
+void commitMain(string author,string commiter,string message);
 
 #endif

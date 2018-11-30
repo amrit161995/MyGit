@@ -6,14 +6,15 @@
 #include<unistd.h>
 #include <vector>
 #include<fstream>
+#include"diff.h"
 using namespace std;
 
 void diff(string f1, string f2,string name){
 
-    cout<<endl;
-    cout<<f1<<endl;
-    cout<<f2<<endl;
-    cout<<name<<endl;    
+    // cout<<endl;
+    // cout<<f1<<endl;
+    // cout<<f2<<endl;
+    // cout<<name<<endl;    
 
     char cwd[1024];
     getcwd(cwd,sizeof(cwd));
@@ -22,8 +23,8 @@ void diff(string f1, string f2,string name){
     string path_f1 = pa + "/.mygit/diff/" + f1;
     string path_f2 = pa + "/.mygit/diff/" + f2;
 
-    cout<<path_f1<<endl;
-    cout<<path_f2<<endl;
+    // cout<<path_f1<<endl;
+    // cout<<path_f2<<endl;
 
     string command = "diff -u " +path_f1+" "+path_f2;
 
@@ -44,7 +45,7 @@ void diff(string f1, string f2,string name){
 
     }
 
-    cout<<s.size()<<endl;
+    // cout<<s.size()<<endl;
 
     int in = 0;
     int del = 0;
@@ -62,7 +63,7 @@ void diff(string f1, string f2,string name){
         // else if(s[i][0]=='-'){
         //     del++;
         // }
-        cout<<s[i]<<endl;
+        // cout<<s[i]<<endl;
         ofs << s[i];
 
         //cout << s[i][0]<< endl;

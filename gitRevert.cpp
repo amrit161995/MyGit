@@ -2,8 +2,14 @@
 #include<stdlib.h>
 #include<iostream>
 #include<string>
-#include"gitCommit.cpp"
-#include"diff.cpp"
+#include"gitCommit.h"
+#include"diff.h"
+#include "tree.h"
+#include "generateSHA.h"
+#include "indexCreate.h"
+#include "gitAdd.h"
+#include "gitStatus.h"
+#include "gitRevert.h"
 // #include"tree.cpp"
 
 using namespace std;
@@ -44,7 +50,7 @@ void retCommitObjectTree(string hash,string &treeObj,string &parent){
     }
 }
 
-void deserialize(string file,string name){
+void deserialize1(string file,string name){
     TestA Test2;
 
     string directory="";
@@ -105,7 +111,7 @@ void revert(string hash,string tre,map<string,int> &lis){
                 string name = tre;
                 for(int i=0;i<na.size();i++) name = name + ":" + na[i];
                 string f = name.substr(0,strlen(name.c_str())-1);
-                deserialize(p[2],f);
+                deserialize1(p[2],f);
                 lis[f]=0;
             }
             else if(p[1]=="tree") {
@@ -219,7 +225,7 @@ void applyDiff(map<string,int> diffFiles) {
                 }
             }
             if(!flag) {
-                for(int i=0;i<outFile.size();i++) cout<<outFile[i]<<endl;
+                // for(int i=0;i<outFile.size();i++) cout<<outFile[i]<<endl;
                 ofstream ofs(name.c_str());
                 for(unsigned int i=0; i<outFile.size(); i++)
                     ofs << outFile[i] << endl;
@@ -240,12 +246,12 @@ void applyDiff(map<string,int> diffFiles) {
     }    
 }
 
-int main(){
-    string oldTreeObj,newTreeObj,parent;
-    retCommitObjectTree("866f77ed73c43c1bb02f5e9365785da6a7d4f99e",newTreeObj,parent);
-    cout<<newTreeObj<<endl;
+void revertMain(string hash){
+	string oldTreeObj,newTreeObj,parent;
+    retCommitObjectTree(hash,newTreeObj,parent);
+    // cout<<newTreeObj<<endl;
     retCommitObjectTree(parent,oldTreeObj,parent);
-    cout<<oldTreeObj<<endl;
+    // cout<<oldTreeObj<<endl;
     mkdir(".mygit/diff",0777);
     mkdir(".mygit/diff_files",0777);
     map<string,int> newFiles;
@@ -264,7 +270,11 @@ int main(){
     string command = "rm -rf .mygit/diff";
     system(command.c_str());
     applyDiff(diffFiles);
-    command = "rm -rf .mygit/diffFiles";
+    command = "rm -rf .mygit/diff_files";
     system(command.c_str());
-    return 0;
 }
+
+// int main(){
+    
+//     return 0;
+// }

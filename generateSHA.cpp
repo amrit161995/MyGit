@@ -5,7 +5,7 @@
 #include <openssl/sha.h>
 #include <fstream>
 #include<vector>
-#include"generateSHA.h"
+// #include"generateSHA.h"
 using namespace std;
 #define block 524288
 

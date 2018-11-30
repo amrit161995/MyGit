@@ -3,7 +3,8 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h>
-#include "indexCreate.cpp"
+#include "indexCreate.h"
+#include "gitStatus.h"
 #include<map>
 
 vector<string> splitStrings(string str, char dl)
@@ -98,6 +99,6 @@ void status() {
     display(m);
 }
 
-int main() {
-    status();
-}
+// int main() {
+//     status();
+// }

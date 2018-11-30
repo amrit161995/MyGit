@@ -12,27 +12,30 @@
 #include<iostream>
 #include<stdlib.h>
 #include<bits/stdc++.h>
-// #include "generateSHA.cpp"
+#include "generateSHA.h"
 using namespace std;
+#include "indexCreate.h"
+#include "tree.h"
 
-#include "gitAdd.cpp"
+
+// class Tree
+// {
+//         public:
+//         char treeContent[10000];
+
+//        
+
+        
+        
+// };
 
 
-class Tree
-{
-        public:
-        char treeContent[100000];
-
-        void Print_Content1()
+ void Tree :: Print_Content1()
         {
             // int len = sizeof(content)/sizeof(char);
             // cout<<"len: "<<len<<endl;
             cout<<treeContent;
         }
-
-        
-        
-};
 
 typedef struct treeObj{
     // char type[10];

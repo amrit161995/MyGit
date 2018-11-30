@@ -5,6 +5,7 @@
 #include<map>
 using namespace std;
 
+vector<string> splitStrings(string str, char dl);
 void listdir(const char *name, int indent, vector<string> &lis);
 void display(map < string,vector<string> > m);
 void status();

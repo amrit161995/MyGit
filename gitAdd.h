@@ -2,43 +2,27 @@
 #define GIT_ADD
 #include <string>
 #include<iostream>
-#endif
 
 using namespace std;
 
 class TestA
 {
-    private:
-        string type="";
-        string header="";
+    public:
+        char type[10];
+        char header[50];
         char *content;
         int length;
         
-
-    public:
         // TestA(){type = "";header="";content=""; length=0; }
-        string gitAdd();
+        string gitAdd(string filename);
 
-        void Print_Type()
-        {
-            cout<<type<<endl;
-        }
-
-        void Print_Content()
-        {
-            int len = sizeof(content)/sizeof(char);
-            // cout<<"len: "<<len<<endl;
-            cout<<content;
-        }
-
-        void setContent(char *con){
-            content=con;
-        }
-
-        char * getContent(){
-            return content;
-        } 
+        void Print_Type();
+       	void Print_Content();
+        void setContent(char *con);
+        char * getContent();
 };
 
-void serialize();
-void deserialize(string str);
+void serialize(string filename);
+string deserialize(string str);
+
+#endif

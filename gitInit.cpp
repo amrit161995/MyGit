@@ -11,10 +11,10 @@
 #include <fstream>    
 #include<string.h>
 #include<errno.h>
-
+#include "gitInit.h"
 using namespace std;
 
-void gitinit(){
+void gitInit(){
     char cwd[1024];
     getcwd(cwd,sizeof(cwd));
     // cout<<cwd<<endl;
@@ -72,9 +72,9 @@ void gitinit(){
     
 }
 
-int main(int args,char *argv[]){
-	// cout<<argv[1];
-	if (strcmp("init",argv[1])==0)
-    	gitinit();
-    return 0;
-}
+// int main(int args,char *argv[]){
+// 	// cout<<argv[1];
+// 	if (strcmp("init",argv[1])==0)
+//     	gitinit();
+//     return 0;
+// }

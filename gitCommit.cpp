@@ -1,7 +1,9 @@
 #include<stdio.h>
 #include<string>
 #include <openssl/sha.h>
-#include "tree.cpp"
+#include "tree.h"
+#include "generateSHA.h"
+#include "indexCreate.h"
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -9,27 +11,30 @@
 #include<fstream>
 #include<iostream>
 #include<stdlib.h>
+#include<dirent.h>
+#include "gitCommit.h"
+#include "gitStatus.h"
 #include <ctime>
 #include <bits/stdc++.h>
 using namespace std;
 
-class Commit
-{
-    public:
-        char type[10]="commit";
-        char tree[60]= "";
-        char parent[60]="";
-        char author[200]="";
-        char committer[200]="";
-        char message[500]="";
-        char * content;
+// class Commit
+// {
+//     public:
+//         char type[10]="commit";
+//         char tree[60]= "";
+//         char parent[60]="";
+//         char author[200]="";
+//         char committer[200]="";
+//         char message[500]="";
+//         char * content;
 
-        void Print_Type()
+        void Commit::Print_Type()
         {
             cout<<type<<endl;
         }
 
-        void Print_Content()
+        void Commit:: Print_Content()
         {
             cout<<"tree : "<<tree<<endl;
              cout<<"parent : "<<parent<<endl;
@@ -39,11 +44,11 @@ class Commit
             cout<<message<<endl;
         }
 
-        void setContent(char *con){
+        void Commit:: setContent(char *con){
             content=con;
         }
 
-        char * getContent(){
+        char * Commit::getContent(){
             return content;
         }
 
@@ -51,12 +56,13 @@ class Commit
 
 
 
-string createCommit(string tree,string parent,string author,string committer,string message)
+string Commit::createCommit(string tree,string author,string committer,string message)
 {   
-
+    string parent="";
 	struct stat buf;
     if (stat("log", &buf) != -1)
     {
+
     	vector <string> vecOfStrs;
         // cout<<"hello";
         std::ifstream in("log");
@@ -135,15 +141,15 @@ string createCommit(string tree,string parent,string author,string committer,str
 }
 
 
-};
 
 
 
 
-void serializeCommit(string tree,string parent,string author,string committer,string message){
+
+void serializeCommit(string tree,string author,string committer,string message){
     //cout<<"hello";
     Commit com;
-    string hash_filename=com.createCommit(tree,parent,author,committer,message);
+    string hash_filename=com.createCommit(tree,author,committer,message);
 
     string directory="";
     string commitname="";
@@ -234,63 +240,63 @@ void deserializeCommit(string file){
 
  }
 
- vector<string> splitStrings(string str, char dl)
-{
-    string word = "";
-    str = str + dl;
-    int l = str.size();
-    vector<string> substr_list;
-    for (int i = 0; i < l; i++) {
-        if (str[i] != dl) {
-            if(str[i]=='\\') {
-                i++;
-            }
-            word = word + str[i];
-        }
-        else {
-            if ((int)word.size() != 0)
-                substr_list.push_back(word);
-            word = "";
-        }
-    }
-    return substr_list;
-}
+//  vector<string> splitStrings(string str, char dl)
+// {
+//     string word = "";
+//     str = str + dl;
+//     int l = str.size();
+//     vector<string> substr_list;
+//     for (int i = 0; i < l; i++) {
+//         if (str[i] != dl) {
+//             if(str[i]=='\\') {
+//                 i++;
+//             }
+//             word = word + str[i];
+//         }
+//         else {
+//             if ((int)word.size() != 0)
+//                 substr_list.push_back(word);
+//             word = "";
+//         }
+//     }
+//     return substr_list;
+// }
 
 
 
-void listdir(const char *name, int indent, vector<string> &lis)
-{
-    DIR *dir;
-    struct dirent *entry;
+// void listdir(const char *name, int indent, vector<string> &lis)
+// {
+//     DIR *dir;
+//     struct dirent *entry;
 
-    if (!(dir = opendir(name)))        
-        return;
+//     if (!(dir = opendir(name)))        
+//         return;
 
-    while ((entry = readdir(dir)) != NULL) {
-        if (entry->d_type == DT_DIR and entry->d_name[0]!='.') {
-            char path[1024];
-            if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
-                continue;
-            snprintf(path, sizeof(path), "%s/%s", name, entry->d_name);
-            // printf("%*s[%s]\n", indent, "", entry->d_name);
-            listdir(path, indent + 2,lis);
-        } 
-        else if(entry->d_name[0]!='.'){
-            char cwd[1024];
-            getcwd(cwd,sizeof(cwd));
-            string pa(cwd);
-            vector<string> na = splitStrings(name,'/');
-            string path;
-            if(na.size()>1) path = pa + "/" + na[na.size()-1] + "/" + entry->d_name;
-            else path = pa + "/" + entry->d_name;
-            lis.push_back(path);
-            // printf("%*s- %s\n", indent, "", entry->d_name);
-        }
-    }
-    closedir(dir);
-}
+//     while ((entry = readdir(dir)) != NULL) {
+//         if (entry->d_type == DT_DIR and entry->d_name[0]!='.') {
+//             char path[1024];
+//             if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+//                 continue;
+//             snprintf(path, sizeof(path), "%s/%s", name, entry->d_name);
+//             // printf("%*s[%s]\n", indent, "", entry->d_name);
+//             listdir(path, indent + 2,lis);
+//         } 
+//         else if(entry->d_name[0]!='.'){
+//             char cwd[1024];
+//             getcwd(cwd,sizeof(cwd));
+//             string pa(cwd);
+//             vector<string> na = splitStrings(name,'/');
+//             string path;
+//             if(na.size()>1) path = pa + "/" + na[na.size()-1] + "/" + entry->d_name;
+//             else path = pa + "/" + entry->d_name;
+//             lis.push_back(path);
+//             // printf("%*s- %s\n", indent, "", entry->d_name);
+//         }
+//     }
+//     closedir(dir);
+// }
 
-void commitMain(){
+void commitMain(string author,string committer,string message){
 	vector<Index> v;
     v=indexRead();
 
@@ -311,7 +317,7 @@ void commitMain(){
    if(flag>0){
    if(m["tracked"].size()!=0) {
         string treehash=createTreeObject(".",v);
-	    serializeCommit(treehash,"asddasa","amrit kataria","amrit kataria","second commit");
+	    serializeCommit(treehash,author,committer,message);
 	    commitAll();
     }
     else{
@@ -356,7 +362,7 @@ else{
 //  int main(){
 //     // string fileName="abc.txt";
     
-//  	commitMain();
+//  	commitMain("abc","xyz","ad");
 //     string hash;
 //     cout<<"enter hash: ";
 //     cin>>hash;

@@ -1,8 +1,8 @@
 #include<stdio.h>
 #include<string>
 #include <openssl/sha.h>
-// #include "generateSHA.cpp"
-#include "indexCreate.cpp"
+#include "generateSHA.h"
+#include "indexCreate.h"
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -11,51 +11,71 @@
 #include<iostream>
 #include<stdlib.h>
 #include <sstream>
-
+#include "gitAdd.h"
 #include<bits/stdc++.h>
 
 using namespace std;
 
 #define deb(x) cout<<"Checkpoint "<<x<<endl
 
-class TestA
+// class TestA
+// {
+//     public:
+//         char type[10];
+//         char header[50];
+//         char *content;
+//         int length;
+        
+
+//     // public:
+//     	// int length;
+        
+//         // TestA(){type = "";header="";content=""; length=0; }
+//         string gitAdd(string fileName);
+
+//         void Print_Type()
+//         {
+//             cout<<type<<endl;
+//         }
+
+//         void Print_Content()
+//         {
+//             // int len = sizeof(content)/sizeof(char);
+//             // cout<<"len: "<<len<<endl;
+//             cout<<content;
+//         }
+
+//         // void setContent(char *con){
+//         //     content=con;
+//         // }
+//         void setContent(char *con){
+//             strcpy(content,con);
+//         }
+
+//         char * getContent(){
+//             return content;
+//         }
+// };
+
+void TestA :: Print_Type()
 {
-    public:
-        char type[10];
-        char header[50];
-        char content[100000];
-        int length;
-        
+    cout<<type<<endl;
+}
 
-    // public:
-    	// int length;
-        
-        // TestA(){type = "";header="";content=""; length=0; }
-        string gitAdd(string fileName);
+void TestA :: Print_Content()
+{
+    int len = sizeof(content)/sizeof(char);
+    // cout<<"len: "<<len<<endl;
+    cout<<content;
+}
 
-        void Print_Type()
-        {
-            cout<<type<<endl;
-        }
+// void TestA :: setContent(char *con){
+//     content=con;
+// }
 
-        void Print_Content()
-        {
-            // int len = sizeof(content)/sizeof(char);
-            // cout<<"len: "<<len<<endl;
-            cout<<content;
-        }
-
-        // void setContent(char *con){
-        //     content=con;
-        // }
-        void setContent(char *con){
-            strcpy(content,con);
-        }
-
-        char * getContent(){
-            return content;
-        }
-};
+char * TestA :: getContent(){
+    return content;
+} 
 
 struct blobObj{
     string type;
@@ -75,8 +95,8 @@ string TestA::gitAdd(string fileName)
     vector<char> bytes(fileSize);
     ifs.read(bytes.data(), fileSize);
     // cout<<"filesize: "<<fileSize<<endl; 
-    // char* t = new char[(long long)(fileSize)+1];
-    // content = t;
+    char* t = new char[(long long)(fileSize)+1];
+    content = t;
     string temp=string(bytes.data(), fileSize);
     strcpy(content, temp.c_str());
     // setContent(content);
@@ -99,7 +119,6 @@ void serialize(string fileName){
     b.hash=hash_filename;
     b.type="blob";
     string writeStr=b.hash+" "+b.type;
-
     struct stat buf;
     int flag=0;
     if (stat(".mygit/info/objectsFile.txt", &buf) != -1)
@@ -149,12 +168,12 @@ void serialize(string fileName){
     for(int i=0;i<2;i++)
         directory+=hash_filename[i];
     mkdir((".mygit/objects/"+directory).c_str(),0777);
-     cout<<directory<<endl;
+     // cout<<directory<<endl;
 
     for(int i=2;i<40;i++)
         blobname+=hash_filename[i];
 
-     cout<<blobname<<endl;
+     // cout<<blobname<<endl;
     // cout<<hash_filename;
 
     //adding entry into index
@@ -162,7 +181,7 @@ void serialize(string fileName){
     getcwd(cwd,sizeof(cwd));
     string pa(cwd);
     string path = pa + "/" + fileName;
-    cout<<path<<endl;
+    // cout<<path<<endl;
     char *cstr = new char[path.length() + 1];
     strcpy(cstr, path.c_str());
     char *cstr1 = new char[hash_filename.length() + 1];
@@ -189,14 +208,14 @@ std::ofstream binFile((".mygit/objects/"+directory+"/"+blobname).c_str(), std::i
           // No need. The file will be closed when the function returns.
           // binFile.close();
        }
-    
+           
 }
 
  string deserialize(string file){
      TestA Test2;
      // FILE *File;
 
-     deb(sizeof(Test2.getContent()));
+     // deb(sizeof(Test2.getContent()));
 
      //     Test2=
  //     Test2=(TestA*)malloc(st.st_size);
@@ -252,12 +271,13 @@ std::ofstream binFile((".mygit/objects/"+directory+"/"+blobname).c_str(), std::i
  }
 
 // int main(){
+//     // cout<<"hello";
 //     // string fileName="abc.txt";
-//     // serialize("test/t.txt");
+//     serialize("7");
 
 //     string hash;
 //     cout<<"enter hash: ";
 //     cin>>hash;
-//     cout<<deserialize(hash);
+//      cout<<deserialize(hash);
 //     return 0;
 // }

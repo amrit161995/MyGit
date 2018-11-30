@@ -6,8 +6,13 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include<stdlib.h>
+
 // #include "indexCreate.cpp"
-#include "gitAdd.cpp"
+#include "indexCreate.h"
+#include "generateSHA.h"
+#include "gitAdd.h"
+#include "gitCheckout.h"
 using namespace std;
 
 string pathname;
@@ -53,7 +58,7 @@ void checkout(string filename){
     char cwd[PATH_MAX];
     // string pathname=getcwd(cwd,sizeof(cwd));
     // pathname=pathname+"/"+filename;
-    cout<<filename<<endl;
+    // cout<<filename<<endl;
     vector<Index> ind=indexRead();
     string fileHash;
     for(int i=0;i<ind.size();i++){
@@ -132,10 +137,14 @@ void checkoutAll(const char* pathname){
     closedir(dir);
 }
 
-int main(){
-   
+void checkoutMain(){
     getRootPath();
     checkoutAll(pathname.c_str());
-    // read();
-    return 0;
 }
+
+// int main(){
+   
+//     checkoutMain();
+//     // read();
+//     return 0;
+// }

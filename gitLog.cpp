@@ -57,7 +57,7 @@ void gitlog(){
     }	
 }
 
-int main(){
-	gitlog();
-	return 0;
-}
+// int main(){
+// 	gitlog();
+// 	return 0;
+// }

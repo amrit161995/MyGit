@@ -1,8 +1,6 @@
 #include<stdio.h>
 #include<string>
 #include <openssl/sha.h>
-#include "gitCommit.cpp"
-// #include "gitAdd.cpp"
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -12,6 +10,12 @@
 #include<stdlib.h>
 #include <ctime>
 #include <bits/stdc++.h>
+#include "cat-file.h"
+#include "gitCommit.h"
+#include "tree.h"
+#include "gitAdd.h"
+#include "generateSHA.h"
+#include "indexCreate.h"
 using namespace std;
 
 
@@ -70,11 +74,11 @@ void catfile(string hash){
         }
 }
 
-int main(){
-    string hash;
-    cout<<"enter hash"<<endl;
-    cin>>hash;
-    catfile(hash);
+// int main(){
+//     string hash;
+//     cout<<"enter hash"<<endl;
+//     cin>>hash;
+//     catfile(hash);
 
-    return 0;
-}
+//     return 0;
+// }

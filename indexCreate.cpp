@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<string>
 #include<cstring>
-#include "generateSHA.cpp"
+#include "generateSHA.h"
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -10,20 +10,20 @@
 #include<iostream>
 #include<stdlib.h>
 #include<map>
-
+#include "indexCreate.h"
 using namespace std;
 
 #define debug(x) cout<<"Checkpoint "<<x<<endl
 
-class Index
-{
+// class Index
+// {
     
 
-public:
-    char mode[10],path[100],hash[40];    
-    int stage,commit;
+// public:
+//     char mode[10],path[100],hash[40];    
+//     int stage,commit;
     
-    void init(char* mode,char* hash,int stage,char* path,int commit) {
+ void Index :: init(char* mode,char* hash,int stage,char* path,int commit) {
         strcpy(this->mode,mode);
         strcpy(this->hash,hash);
         strcpy(this->path,path);
@@ -31,29 +31,28 @@ public:
         this->commit = commit;
     }       
 
-    char* getPath() {
+    char* Index :: getPath() {
         return path;
     }
 
-    char* getHash() {
+    char* Index :: getHash() {
         return hash;
     }
 
-    int getCommit() {
+    int Index :: getCommit() {
         return commit;
     }
 
-    void setCommit(int c) {
+    void Index :: setCommit(int c) {
         this->commit = c;
     }
 
-    void display() {
+    void Index :: display() {
         cout<<mode<<endl;
         cout<<hash<<endl;
         cout<<stage<<endl;
         cout<<path<<endl;
     }
-};
 
 vector<Index> indexRead(){
     //Reading
