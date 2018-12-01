@@ -60,9 +60,10 @@ string createTreeObject(char *path1,vector<Index> list){
             snprintf(path, sizeof(path), "%s/%s", path1, entry->d_name);
             string hash_temp=createTreeObject(path,list);
             // cout<<endl;
-            // cout<<hash_temp<<endl;            
-            string temp1=entry->d_name;
-            cout<<temp1<<endl;
+            // cout<<hash_temp<<endl; 
+            string tempath=realpath(path1,NULL);           
+            string temp1=tempath+"/"+entry->d_name;
+            // cout<<temp1<<endl;
             string temp="040000 tree " + hash_temp +" "+ temp1+";\n";
             content=content+temp;
 

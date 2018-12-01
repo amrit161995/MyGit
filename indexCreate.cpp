@@ -75,10 +75,10 @@ void indexFill(char* mode,char* hash,int stage,char* path,int commit){
     bool flag=0;
     int i;
     vector<Index> lis = indexRead();
-    cout<<lis.size()<<endl;
+    // cout<<lis.size()<<endl;
     for(i=0;i<lis.size();i++) if(strcmp(path,lis[i].getPath())==0) {flag=1;break;}
     if(flag==0) {
-        cout<<"Added to index file"<<endl;
+        // cout<<"Added to index file"<<endl;
         Index test;
         test.init(mode,hash,stage,path,commit);
         ofstream ofs(".mygit/index",ios::app|ios::binary);

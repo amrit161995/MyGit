@@ -1,11 +1,11 @@
 CC=g++
 CFLAGS= -Wall -std=c++1z
-DEPS= generateSHA.h gitInit.h indexCreate.h gitAdd.h tree.h gitCommit.h cat-file.h gitLog.h gitStatus.h gitCheckout.h diff.h gitRevert.h
-OBJ= generateSHA.o gitInit.o indexCreate.o gitAdd.o tree.o gitCommit.o cat-file.o gitLog.o gitStatus.o gitCheckout.o diff.o gitRevert.o
+DEPS= generateSHA.h gitInit.h indexCreate.h gitAdd.h tree.h gitCommit.h cat-file.h gitLog.h gitStatus.h gitCheckout.h diff.h gitRevert.h gitReset.h
+OBJ= generateSHA.o gitInit.o indexCreate.o gitAdd.o tree.o gitCommit.o cat-file.o gitLog.o gitStatus.o gitCheckout.o diff.o gitRevert.o gitReset.o
 TEMP=-lssl -lcrypto
 
 mygit: mainRunner.cpp $(DEPS) 
-	$(CC) $(CFLAGS) mainRunner.cpp cat-file.cpp gitInit.cpp gitAdd.cpp generateSHA.cpp indexCreate.cpp gitCommit.cpp tree.cpp gitLog.cpp gitStatus.cpp diff.cpp gitRevert.cpp gitCheckout.cpp $(TEMP) -o $@
+	$(CC) $(CFLAGS) mainRunner.cpp cat-file.cpp gitInit.cpp gitAdd.cpp generateSHA.cpp indexCreate.cpp gitCommit.cpp tree.cpp gitLog.cpp gitStatus.cpp diff.cpp gitReset.cpp gitRevert.cpp gitCheckout.cpp $(TEMP) -o $@
 
 gitInit.o: gitInit.cpp $(DEPS)
 	$(CC) $(CFLAGS) gitInit.cpp -o $@
@@ -18,7 +18,7 @@ indexCreate.o: indexCreate.cpp $(DEPS)
 	$(CC) $(CFLAGS) indexCreate.cpp generateSHA.cpp $(TEMP) -o $@
 
 gitAdd.o: gitAdd.cpp $(DEPS)
-	$(CC) $(CFLAGS) gitAdd.cpp indexCreate.cpp generateSHA.cpp $(TEMP) -o $@
+	$(CC) $(CFLAGS) gitAdd.cpp indexCreate.cpp generateSHA.cpp gitStatus.cpp $(TEMP) -o $@
 
 tree.o: tree.cpp $(DEPS)
 	$(CC) $(CFLAGS) tree.cpp indexCreate.cpp generateSHA.cpp $(TEMP) -o $@
@@ -43,6 +43,9 @@ diff.o: diff.cpp $(DEPS)
 
 gitRevert.o: gitRevert.cpp $(DEPS)
 	$(CC) $(CFLAGS) gitRevert.cpp diff.cpp gitStatus.cpp gitCommit.cpp tree.cpp indexCreate.cpp generateSHA.cpp gitAdd.cpp $(TEMP) -o $@
+
+gitReset.o: gitReset.cpp $(DEPS)
+	$(CC) $(CFLAGS) gitReset.cpp gitStatus.cpp gitCommit.cpp tree.cpp indexCreate.cpp generateSHA.cpp gitAdd.cpp $(TEMP) -o $@
 
 .PHONY : clean
 clean :

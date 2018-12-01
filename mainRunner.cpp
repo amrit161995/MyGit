@@ -13,6 +13,7 @@
 #include "gitCheckout.h"
 #include "gitRevert.h"
 #include "diff.h"
+#include "gitReset.h"
 // #include "gitLog.h"
 // #include "gitStatus.h"
 
@@ -29,16 +30,15 @@ int main(int argc,char* argv[]){
     else if(strcmp(argv[1],"add")==0){
     	// cout<<argv[2];
     	if(argc == 3){
-    	if( argv[2]!=".")
-        	serialize(argv[2]); 
+	    	if(strcmp(argv[2],".")==0){
 
-        // string hash;
-        // cin>>hash;
-        // cout<<deserialize(hash); 
-        // else{
-        // 	addAll();
-        // }
-    	}
+	    		addAll(".");
+	    	}
+	       	else
+	       		serialize(argv[2]);
+	        	
+
+        }
     	else{
     		cout<<"Invalid Syntax"<<endl;
     	}
@@ -83,7 +83,7 @@ int main(int argc,char* argv[]){
 
     else if(strcmp(argv[1],"checkout")==0){
     	if(argc==3){
-	        if( argv[2]!=".")
+	        if(strcmp(argv[2],".")==0)
 	        	checkoutMain();
 	        else
 	        	checkout(argv[2]);
@@ -99,6 +99,14 @@ int main(int argc,char* argv[]){
         else
         	cout<<"Invalid Syntax"<<endl;
     }
+
+    else if(strcmp(argv[1],"reset")==0){
+    	if(argc==3)
+        	gitResetMain(argv[2]);
+        else
+        	cout<<"Invalid Syntax"<<endl;
+    }
+
 
     else if(strcmp(argv[1],"log")==0){
     	if(argc==2)

@@ -24,5 +24,5 @@ class TestA
 
 void serialize(string filename);
 string deserialize(string str);
-
+void addAll(const char *name);
 #endif

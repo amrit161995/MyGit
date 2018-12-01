@@ -13,11 +13,11 @@ using namespace std;
 
 void gitlog(){
 	struct stat buf;
-    if (stat("log", &buf) != -1)
+    if (stat(".mygit/log", &buf) != -1)
     {
     	vector <string> vecOfStrs;
         // cout<<"hello";
-        std::ifstream in("log");
+        std::ifstream in(".mygit/log");
         string str;
 		while (std::getline(in, str))
 			{

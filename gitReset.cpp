@@ -8,9 +8,12 @@
 #include <dirent.h>
 #include <sstream>
 #include <fstream>
-// #include "gitAdd.cpp"
-// #include "tree.cpp"
-#include "gitCommit.cpp"
+#include "gitAdd.h"
+#include "tree.h"
+#include "gitCommit.h"
+#include "gitStatus.h"
+#include "indexCreate.h"
+#include "generateSHA.h"
 #define DEBUG(x) std::cout<<"checkpoint"<<x<<endl
 
 using namespace std;
@@ -28,7 +31,7 @@ vector<string> splitString(string s,char delim){
     return v;
 }
 
-void getRootPath(){
+void getRPath(){
     DIR *dir;
     struct dirent *entry;
 
@@ -49,7 +52,7 @@ void getRootPath(){
         } 
     }
     chdir("..");
-    getRootPath();
+    getRPath();
     closedir(dir);
     
 }
@@ -58,7 +61,7 @@ void reset(string hash){
     if(hash!="") {
         Tree tr;
         FILE *File;
-        DEBUG("7");
+        // DEBUG("7");
         string directory="";
         string objectname="";
 
@@ -69,34 +72,34 @@ void reset(string hash){
             objectname+=hash[i];
 
         string path=".mygit/objects/"+directory+"/"+objectname;
-        cout<<path<<endl;
+        // cout<<path<<endl;
         File = fopen(path.c_str(),"rb");
-        DEBUG("9");
+        // DEBUG("9");
         fread((char *)&tr,sizeof(tr),1,File); //Treats the object as if it is a char array
-        DEBUG("8");
-        cout<<tr.treeContent<<endl;
+        // DEBUG("8");
+        // cout<<tr.treeContent<<endl;
         string content(tr.treeContent);
         vector<string> files = splitString(content,'\n');
 
         for(int i=0;i<files.size();i++) {
             vector<string> p = splitString(files[i],' ');
-            DEBUG("6");
+            // DEBUG("6");
             if(p[1]=="blob") {
                 // cout<<p[1]<<endl;
-                DEBUG("1");
+                // DEBUG("1");
                 string fPath=p[3];
                 fPath.pop_back();
-                cout<<fPath<<endl;
+                // cout<<fPath<<endl;
                 string fContent=deserialize(p[2]);
                 string con(fContent);
                 std::ofstream ofs;
                 ofs.open (fPath, std::ofstream::out);
                 ofs << fContent;
                 ofs.close();
-                DEBUG("3");
+                // DEBUG("3");
             }
      else if(p[1]=="tree") {
-                DEBUG("2");
+                // DEBUG("2");
                 string dir=p[3];
                 dir.pop_back();
                 // // cout<<globDir<<endl;
@@ -201,13 +204,66 @@ int remove_directory(string globDir)
    return r;
 }
 
-int main(){
-    getRootPath();
-    string hash=retCommitObjectTree("ccd59ff47d6763b86d00c6fe6853e5d7b783b771");
-    cout<<hash;
-    // remove_directory(globDir1.c_str());
-    // unlink(".mygit/index");
-    reset(hash);
-    
-    return 0;
+void setLog(string hash){
+
+struct stat buf;
+    if (stat(".mygit/log", &buf) != -1)
+    {
+    	vector <string> vecOfStrs;
+    	vector <string> vecResult;
+        // cout<<"hello";
+        std::ifstream in(".mygit/log");
+        string str;
+		while (std::getline(in, str))
+			{
+				// Line contains string of length > 0 then save it in vector
+				if(str.size() > 0)
+					vecOfStrs.push_back(str);
+			}
+
+
+			for(int i=0;i<vecOfStrs.size();i++){
+				string line = vecOfStrs[i]; 
+			    
+			    vector <string> tokens; 
+			    stringstream check1(line); 
+			    string intermediate; 
+			     
+			    while(getline(check1, intermediate, '|')) 
+			    { 
+			        tokens.push_back(intermediate); 
+			    } 
+			    vecResult.push_back(vecOfStrs[i]);
+			    if(tokens[1]==hash)
+			    	break;
+			}
+				std::ofstream ofs;
+		    	 ofs.open (".mygit/log", std::ofstream::out);
+			for(int i=0;i<vecResult.size();i++){
+				
+		    	 ofs << vecResult[i]<<endl;
+		    	 
+			}
+			ofs.close();
+			
+	}
+			      
 }
+
+void gitResetMain(string hash1){
+	getRPath();
+    string hash=retCommitObjectTree(hash1);
+    // cout<<hash;
+    // remove_directory(globDir1.c_str());
+    unlink(".mygit/index");
+    addAll(".");
+    setLog(hash1);
+    reset(hash);
+}
+
+// int main(){
+//     string hash;
+//     cin>>hash;
+//     gitResetMain(hash);
+//     return 0;
+// }

@@ -12,6 +12,8 @@
 #include<stdlib.h>
 #include <sstream>
 #include "gitAdd.h"
+#include "gitStatus.h"
+#include<dirent.h>
 #include<bits/stdc++.h>
 
 using namespace std;
@@ -211,6 +213,47 @@ std::ofstream binFile((".mygit/objects/"+directory+"/"+blobname).c_str(), std::i
            
 }
 
+void addAll(const char *name)
+{
+    DIR *dir;
+    struct dirent *entry;
+    // cout<<name<<endl;
+
+    if (!(dir = opendir(name)))        
+        return;
+
+    while ((entry = readdir(dir)) != NULL) {
+        if (entry->d_type == DT_DIR and entry->d_name[0]!='.') {
+            char path[1024];
+            if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+                continue;
+            snprintf(path, sizeof(path), "%s/%s", name, entry->d_name);
+            // printf("%*s[%s]\n", indent, "", entry->d_name);
+            addAll(path);
+        } 
+        else if(entry->d_name[0]!='.'){
+            // char cwd[1024];
+            // getcwd(cwd,sizeof(cwd));
+            // string pa(cwd);
+            vector<string> na = splitStrings(name,'/');
+            // cout<<name<<endl;
+            string path;
+            if(na.size()>1) {
+                for(int i=1;i<na.size();i++) {
+                    path = na[i] + "/" + entry->d_name;
+                }
+            }
+            else path = entry->d_name;
+            // cout<<path<<endl;
+            serialize(path);
+            // cout<<path + " done"<<endl;
+            // lis.push_back(path);
+            // printf("%*s- %s\n", indent, "", entry->d_name);
+        }
+    }
+    closedir(dir);
+}
+
  string deserialize(string file){
      TestA Test2;
      // FILE *File;
@@ -281,3 +324,8 @@ std::ofstream binFile((".mygit/objects/"+directory+"/"+blobname).c_str(), std::i
 //      cout<<deserialize(hash);
 //     return 0;
 // }
+
+ // int main() {
+ //    addAll(".");
+ //    return 0;
+ // }

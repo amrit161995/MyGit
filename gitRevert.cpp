@@ -218,11 +218,11 @@ void applyDiff(map<string,int> diffFiles) {
             string pathDiff = ".mygit/diff_files/" + it->first;
             diffFile = fileToVector(pathDiff);
             // for(int i=0;i<diffFile.size();i++) cout<<diffFile[i]<<endl;  
-            diffFile.erase(diffFile.begin());
-            diffFile.erase(diffFile.begin());
+            // diffFile.erase(diffFile.begin());
+            // diffFile.erase(diffFile.begin());
 
-            // for(int i=0;i<curFile.size();i++) cout<<curFile[i]<<endl;
-            // for(int i=0;i<diffFile.size();i++) cout<<diffFile[i]<<endl;
+            for(int i=0;i<curFile.size();i++) cout<<curFile[i]<<endl;
+            for(int i=0;i<diffFile.size();i++) cout<<diffFile[i]<<endl;
             // string st = diffFile[diffFile.size()-1];
             // if(diffFile[diffFile.size()-1]=="")            
             int i=0,j=0;
@@ -295,7 +295,8 @@ void applyDiff(map<string,int> diffFiles) {
             serialize(relPath);
         }
     }
-    commitMain("xyz","abc","Rvert commit");
+    commitMain("xyz","abc","Revert commit");
+    debug("after commitmain");
 }
 
 void revertMain(string hash){

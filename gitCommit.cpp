@@ -60,12 +60,12 @@ string Commit::createCommit(string tree,string author,string committer,string me
 {   
     string parent="";
 	struct stat buf;
-    if (stat("log", &buf) != -1)
+    if (stat(".mygit/log", &buf) != -1)
     {
 
     	vector <string> vecOfStrs;
         // cout<<"hello";
-        std::ifstream in("log");
+        std::ifstream in(".mygit/log");
         string str;
 		while (std::getline(in, str))
 			{
@@ -126,7 +126,7 @@ string Commit::createCommit(string tree,string author,string committer,string me
     	// string timetemp=(string)result;
     	string log=parent+"|" + sha1 + "|" + author + "|" + committer + "|"+to_string(result) +"|+530"+ "|commit|"+message+"\n";
     	 std::ofstream ofs;
-    	 ofs.open ("log", std::ofstream::out | std::ofstream::app);
+    	 ofs.open (".mygit/log", std::ofstream::out | std::ofstream::app);
     	 ofs << log;
     	 ofs.close();
 
