@@ -63,7 +63,13 @@ void diff(string f1, string f2,string name){
         // else if(s[i][0]=='-'){
         //     del++;
         // }
-        // cout<<s[i]<<endl;
+        if(s[i]=="\\ No newline at end of file\n") {
+            // cout<<"found"<<endl;
+            continue;
+        }
+        // else {
+        //     cout<<"not found"<<endl;
+        // }
         ofs << s[i];
 
         //cout << s[i][0]<< endl;

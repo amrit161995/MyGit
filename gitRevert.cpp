@@ -319,11 +319,11 @@ void revertMain(string hash){
     // }
     map<string,int> diffFiles;
     calculateDiff(newFiles,oldFiles,diffFiles);
-    // string command = "rm -rf .mygit/diff";
-    // system(command.c_str());
+    string command = "rm -rf .mygit/diff";
+    system(command.c_str());
     applyDiff(diffFiles);
-    // command = "rm -rf .mygit/diff_files";
-    // system(command.c_str());
+    command = "rm -rf .mygit/diff_files";
+    system(command.c_str());
 }
 
 // int main(){
